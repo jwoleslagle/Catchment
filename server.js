@@ -3,7 +3,7 @@ const axios = require("axios")
 
 const server = express()
 
-server.use(express.static("public"))
+server.use(express.static("."))
 
 server.get("/api", (req, res) => {
   const params = req.query
