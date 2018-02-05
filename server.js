@@ -13,7 +13,6 @@ server.get("/api", (req, res) => {
     "&longitude=" +
     params.Lng +
     "&showall=true"
-  debugger
   axios(url)
     .then(apiRes => {
       res.json(apiRes.data.Block.FIPS)
@@ -35,7 +34,6 @@ server.get("/census", (req, res) => {
       res.json(data.data.dataset)
     })
     .catch(err => {
-      debugger
       res.json({ error: err })
     })
 })
