@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catchment App</title>
+
+    <!--Stylesheets-->
+    <!--Bootstrap for responsiveness-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!--Main stylesheet-->
+    <link href="main.css" rel="stylesheet" type="text/css" />
+
+    <!--Scripts-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_X-5DMfJFF_jbKvNcyXAE2zt32-2jDlI"></script>
+
+  </head>
+
+  <body>
+    <main role="main">
+        <!-- <div id="map_canvas" class="map_canvas"></div> -->
+        <div class="container-fluid">
+            
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="search-box">
+                        <h3>Catchment Logo</h3>
+                        <form action="#" class="js-search-form">
+                        <label for="query">Enter a search address:</label>
+                        <input type="text" class="js-query" id="search" aria-label="search" />
+                        <button type="button" aria-label="geolocate">Geolocate</button>
+                        <button type="submit" aria-label="submit">Search</button>
+                        </form>
+                    </div>
+
+                    <div class="parent-container">
+                        <div class="col-md-6 mx-auto">
+                            <form action="#" class="js-search-form-advanced-options search-form-advanced-options">
+                                <fieldset>
+                                    <legend>Advanced results</legend>
+                                    <div>
+                                        <input type="checkbox" id="option1" name="searchOption" value="option1">
+                                        <label for="option1">Option 1</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="option2" name="searchOption" value="option2">
+                                        <label for="option2">Option 2</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="option1" name="searchOption" value="option3">
+                                        <label for="option3">Option 3</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="option2" name="searchOption" value="option4">
+                                        <label for="option4">Option 4</label>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <form action="#" class="js-search-form-transit-times search-form-transit-times">
+                                <fieldset>
+                                    <legend>Transit Times</legend>
+                                    <div>
+                                        <label for="option5">Option 5: </label>
+                                        <input type="text" id="option5" name="searchOption" size= "4" maxsize="4" value="option5">
+                                    </div>
+                                    <div>
+                                        <label for="option6">Option 6: </label>
+                                        <input type="text" id="option6" name="searchOption" size= "4" maxsize="4" value="option6">
+                                    </div>
+                                    <div>
+                                        <label for="option7">Option 7: </label>
+                                        <input type="text" id="option7" name="searchOption" size= "4" maxsize="4" value="option7">
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-12">
+                    <br /><br /><br /><br />
+                    <br /><br /><br /><br />
+                    <h3>Map Goes Here</h3>
+                    <br /><br /><br /><br />
+                    <br /><br /><br /><br />
+                </div>
+            </div>  
+                
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="results">
+                        <br /><br /><br /><br />
+                        <p class="text-center">Results shown here.</p>
+                        <br /><br /><br /><br />
+                    </div>
+                </div>
+            </div>
+
+    </main>
+    <footer role="contentinfo">This footer should be positioned at the bottom of the page.</footer>
+
+    </div>
+    
+    <script src="index.js"></script>
+
+  </body>
+</html>

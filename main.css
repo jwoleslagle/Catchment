@@ -1,0 +1,50 @@
+* {
+    box-sizing: border-box;
+}
+
+footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #efefef;
+    text-align: center;
+}
+
+legend {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+h3 {
+    text-align: center;
+}
+
+.parent-container {
+    display: flex;
+    background-color: lightgray;
+    padding-top: 10px;
+}
+
+.results {
+    background-color: lightgray;
+}
+
+.search-box {
+    text-align: center;
+    background-color: lightgray;
+    padding: 10px;
+}
+
+.search-form-advanced-options {
+    text-align: center;
+}
+
+.search-form-transit-times {
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
