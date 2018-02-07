@@ -9,6 +9,11 @@ footer {
     left: 0;
     padding: 1rem;
     background-color: #efefef;
+    opacity: 0.8;
+    text-align: center;
+}
+
+h3 {
     text-align: center;
 }
 
@@ -17,24 +22,49 @@ legend {
     font-weight: bold;
 }
 
-h3 {
-    text-align: center;
+.advanced-options {
+    background-color: lightgray;
+    opacity: 0.8;
+}
+
+.fa .fa-arrows-v {
+    font-size: 24px;
+}
+
+.fa .fa-map-marker {
+    font-size: 24px;
+}
+
+.geolocate-btn {
+    background-color: royalblue;
+    opacity: 1.0;
+}
+
+.map_canvas {
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
 }
 
 .parent-container {
     display: flex;
-    background-color: lightgray;
     padding-top: 10px;
 }
 
-.results {
+.results-container {
     background-color: lightgray;
+    opacity: 0.8;
 }
 
 .search-box {
     text-align: center;
     background-color: lightgray;
+    opacity: 0.8;
     padding: 10px;
+    border-radius: 5px;
 }
 
 .search-form-advanced-options {
@@ -43,6 +73,10 @@ h3 {
 
 .search-form-transit-times {
     text-align: center;
+}
+
+.submit-btn  {
+    opacity: 1.0;
 }
 
 .text-center {
