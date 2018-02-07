@@ -4,7 +4,8 @@ let pos = {
 	lng: -96.1429296
 };
 let markersArray = [];
-let fips = {};
+let FIPS = {};
+const FCCFIPS_ENDPOINT_URL = "http://data.fcc.gov/api/block/find";
 
 function initMap() {
 	console.log('initMap ran.');
@@ -47,10 +48,23 @@ function codeAddress(address) {
 	});
 }
 
-function generateFIPS() {
-	const url = "http://data.fcc.gov/api/block/find?format=json&latitude=" +
-    pos.lat + "&longitude=" +  pos.lng + "&showall=true";
-		
+function generateFIPSObj(longFIPS) {
+	console.log(`generateFIPSObj ran with FIPS ID: ${longFIPS}.`);
+	FIPS.FIPS = longFIPS;
+	FIPS.stateFIPS = longFIPS.substr(0, 2); 
+	FIPS.countyFIPS = longFIPS.substr(2, 3);
+	FIPS.tract = longFIPS.substr(5, 6);
+	FIPS.blockGroup = longFIPS.substr(11, 1);
+	FIPS.block = longFIPS.substr(11, 4);
+	console.log(FIPS);
+}
+
+function getFIPS() {
+	let basicFIPS = '';
+	let query = {
+		Lat: pos.lat,
+		Lng: pos.lng	};
+	$.get("/api", query, generateFIPSObj);
 }
 
 function handleClearMarkersPress() {
@@ -88,6 +102,7 @@ function handleGeolocatePress() {
 					map.setCenter(pos);
 					map.setZoom(14);
 					reverseGeocode();
+					getFIPS();
 				}, function() {
 					handleLocationError(true, infoWindow, map.getCenter());
 				}, options);
@@ -155,3 +170,13 @@ $(renderStartPage);
 //	infoWindow.setPosition(pos);
 //	infoWindow.setContent('Closest location found.');
 // 	infoWindow.open(map);
+
+//$.get("/api", query, function(data) {
+//	basicFIPS = data;
+//	FIPS.countyFIPS = data.substr(2, 3);
+//	FIPS.stateFIPS = data.substr(0, 2);
+//	FIPS.tract = data.substr(7, 6);
+//	FIPS.blockGroup = data.substr(13, 1);
+//	FIPS.block = data.substr(13, 4);
+//	console.log(FIPS);
+//});

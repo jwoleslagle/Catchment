@@ -6,6 +6,7 @@ const server = express()
 server.use(express.static("."))
 
 server.get("/api", (req, res) => {
+  console.log('Server request ran.')
   const params = req.query
   const url =
     "http://data.fcc.gov/api/block/find?format=json&latitude=" +
@@ -15,6 +16,7 @@ server.get("/api", (req, res) => {
     "&showall=true"
   axios(url)
     .then(apiRes => {
+      console.log(apiRes.data.Block.FIPS)
       res.json(apiRes.data.Block.FIPS)
     })
     .catch(error => {
