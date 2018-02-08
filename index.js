@@ -1,11 +1,11 @@
-let geocoder, map;
+
+let geocoder, map, colorPolygonLayer;
 let pos = {
 	lat: 41.2380564,
 	lng: -96.1429296
 };
 let markersArray = [];
 let FIPS = {};
-const FCCFIPS_ENDPOINT_URL = "http://data.fcc.gov/api/block/find";
 
 function initMap() {
 	console.log('initMap ran.');
@@ -29,23 +29,48 @@ function clearOverlays() {
 
 function codeAddress(address) {
 	console.log('codeAddress ran.');
-	let infoWindow = new google.maps.InfoWindow;
 	geocoder.geocode( { 'address': address}, function(results, status) {
 		if (status == 'OK') {
 			pos.lat = results[0].geometry.location.lat();
 			pos.lng = results[0].geometry.location.lng();
-			map.setCenter(results[0].geometry.location);
-			map.setZoom(16);
-			let marker = new google.maps.Marker({
-				map: map,
-				position: pos});
-			markersArray.push(marker);
-			google.maps.event.addListener(marker,"click",function(){});
+			dropMarker();
 			$('button.clear-markers-btn').prop('disabled', false);
 		} else {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
 	});
+}
+
+function dropMarker() {
+	clearOverlays();
+	let marker = new google.maps.Marker({
+		map: map,
+		draggable: true,
+		animation: google.maps.Animation.DROP,
+		position: pos});
+	markersArray.push(marker);
+	colorPolygonLayer = r360.googleMapsPolygonLayer(map);
+	showPolygons();
+	//google.maps.event.addListener(marker,"click",function(){});
+	$('button.clear-markers-btn').prop('disabled', false);
+	google.maps.event.addListener(marker, 'dragend', function(event) {	
+		pos.lat = event.latLng.lat();
+		pos.lng = event.latLng.lng();
+		map.setCenter(pos);
+		reverseGeocode();
+		showPolygons();
+		getFIPS();
+		});
+	let infoWindow = new google.maps.InfoWindow;
+	infoWindow.setPosition(pos);
+	infoWindow.setContent('Closest location found.');
+	setTimeout(function () { infoWindow.open(map); }, 1000);
+	setTimeout(function () { infoWindow.close(); }, 3000);
+
+	map.setCenter(pos);
+	map.setZoom(15);
+
+	getFIPS();
 }
 
 function generateFIPSObj(longFIPS) {
@@ -88,21 +113,8 @@ function handleGeolocatePress() {
 			navigator.geolocation.getCurrentPosition(function(position) {
 					pos.lat = position.coords.latitude;
 					pos.lng = position.coords.longitude;
-					let marker = new google.maps.Marker({
-						map: map,
-						draggable: true,
-						position: pos});
-					markersArray.push(marker);
-					google.maps.event.addListener(marker,"click",function(){});
-					$('button.clear-markers-btn').prop('disabled', false);
-					infoWindow.setPosition(pos);
-					infoWindow.setContent('Closest location found.');
-					infoWindow.open(map);
-					setTimeout(function () { infoWindow.close(); }, 3000);
-					map.setCenter(pos);
-					map.setZoom(14);
 					reverseGeocode();
-					getFIPS();
+					dropMarker();
 				}, function() {
 					handleLocationError(true, infoWindow, map.getCenter());
 				}, options);
@@ -162,21 +174,29 @@ function renderStartPage() {
 	handleClearMarkersPress();
 }
 
+function showPolygons() {
+	console.log('showPolygons ran.');
+	let travelOptions = r360.travelOptions();
+	travelOptions.setServiceKey("9R3ACENBBE1POU85N7PVMSR");
+	travelOptions.setServiceUrl("https://service.route360.net/northamerica/");
+	travelOptions.addSource({ lat: pos.lat, lng: pos.lng });
+	travelOptions.setTravelTimes([600, 1200, 1800]);
+	travelOptions.setTravelType("car");
+	travelOptions.setDate("20150706");
+	travelOptions.setTime("39000");
+
+	// call the service
+	r360.PolygonService.getTravelTimePolygons(travelOptions,
+		function(polygons) {
+			colorPolygonLayer.update(polygons);
+		},
+		function(status, message) {
+			console.log("The route360 API is not available - double check your configuration options.");
+		}
+	);
+}
+
 console.log('App started.');
 $(renderStartPage);
 
-// Code holding bin
-
-//	infoWindow.setPosition(pos);
-//	infoWindow.setContent('Closest location found.');
-// 	infoWindow.open(map);
-
-//$.get("/api", query, function(data) {
-//	basicFIPS = data;
-//	FIPS.countyFIPS = data.substr(2, 3);
-//	FIPS.stateFIPS = data.substr(0, 2);
-//	FIPS.tract = data.substr(7, 6);
-//	FIPS.blockGroup = data.substr(13, 1);
-//	FIPS.block = data.substr(13, 4);
-//	console.log(FIPS);
-//});
+// Code parking lot
