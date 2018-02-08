@@ -29,7 +29,7 @@
         <div class="container-fluid">
             <div id="map_canvas" class="map_canvas"></div>
             <div class="row">
-                <div class="col-md-8 mx-auto">
+                <div class="col-sm-6 mx-auto">
                     <div class="search-box">
                         <h3>Catchment Logo</h3>
                         <form id="js-search-form">
@@ -45,59 +45,60 @@
 												</div>
                     </div>
 
-                    <div class="advanced-options row">
-                        <div class="col-6 mx-auto">
-                            <form action="#" class="js-search-form-advanced-options search-form-advanced-options">
-                                <fieldset>
-                                    <legend>Advanced results</legend>
-                                    <div>
-                                        <input type="checkbox" id="option1" name="searchOption" value="option1">
-                                        <label for="option1">Option 1</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" id="option2" name="searchOption" value="option2">
-                                        <label for="option2">Option 2</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" id="option3" name="searchOption" value="option3">
-                                        <label for="option3">Option 3</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" id="option4" name="searchOption" value="option4">
-                                        <label for="option4">Option 4</label>
-                                    </div>
-                                </fieldset>
-                            </form>
-                        </div>
+                    <div class="row">
+                        <div class="advanced-options col-sm-10 mx-auto">
+                            <div class="advanced-options-panel">
+                                <form action="#" class="js-search-form-advanced-options">
+                                    <fieldset>
+                                        <legend>Advanced results</legend>
+                                        <div>
+                                            <input type="checkbox" id="option1" name="searchOption" value="option1">
+                                            <label for="option1">Option 1</label>
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" id="option2" name="searchOption" value="option2">
+                                            <label for="option2">Option 2</label>
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" id="option3" name="searchOption" value="option3">
+                                            <label for="option3">Option 3</label>
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" id="option4" name="searchOption" value="option4">
+                                            <label for="option4">Option 4</label>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
 
-                        <div class="col-6 mx-auto">
-                            <form action="#" class="js-search-form-transit-times search-form-transit-times">
-                                <fieldset>
-                                    <legend>Transit Times</legend>
-                                    <div>
-                                        <label for="option5">Option 5: </label>
-                                        <input type="text" id="option5" name="searchOption" size= "4" maxsize="4" value="1234">
-                                    </div>
-                                    <div>
-                                        <label for="option6">Option 6: </label>
-                                        <input type="text" id="option6" name="searchOption" size= "4" maxsize="4" value="1234">
-                                    </div>
-                                    <div>
-                                        <label for="option7">Option 7: </label>
-                                        <input type="text" id="option7" name="searchOption" size= "4" maxsize="4" value="1234">
-                                    </div>
-                                </fieldset>
-                            </form>
+                            <div class="transit-times-panel">
+                                <form action="#" class="js-search-form-transit-times">
+                                    <fieldset>
+                                        <legend>Transit Times</legend>
+                                        <div>
+                                            <label for="option5">Option 5: </label>
+                                            <input type="text" id="option5" name="searchOption" size= "4" maxsize="4" value="1234">
+                                        </div>
+                                        <div>
+                                            <label for="option6">Option 6: </label>
+                                            <input type="text" id="option6" name="searchOption" size= "4" maxsize="4" value="1234">
+                                        </div>
+                                        <div>
+                                            <label for="option7">Option 7: </label>
+                                            <input type="text" id="option7" name="searchOption" size= "4" maxsize="4" value="1234">
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
                         </div>
-
                     </div>
 
                 </div>
             </div>
                 
             <div class="results-container row">
-                <div class="col-md-6 mx-auto">
-										<div class="results"></div>
+                <div class="col-sm-6 mx-auto">
+					<div class="results"></div>
                 </div>
             </div>
 

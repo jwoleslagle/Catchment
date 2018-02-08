@@ -16,8 +16,6 @@ function initMap() {
 		center: pos
 		}
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-	$('div.advanced-options').hide();
-	$('div.results').hide();
 }
 
 function clearOverlays() {
@@ -39,6 +37,15 @@ function codeAddress(address) {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
 	});
+}
+
+function displayResults() {
+	let resultsString = `
+		<p>Current position is ${pos.lat}, ${pos.lng}.<br />
+		Current FIPS ID is ${FIPS.FIPS}.</p>
+		`;
+	$('div.results').html(resultsString);
+	$('div.results-container').slideDown("slow");
 }
 
 function dropMarker() {
@@ -82,6 +89,7 @@ function generateFIPSObj(longFIPS) {
 	FIPS.blockGroup = longFIPS.substr(11, 1);
 	FIPS.block = longFIPS.substr(11, 4);
 	console.log(FIPS);
+	displayResults();
 }
 
 function getFIPS() {
@@ -161,7 +169,7 @@ function watchAdvOptionsDropdown() {
 	console.log('watchAdvOptionsDropdown ran.');
 	$('button.dropdown-btn').on('click', (e) => {
 			console.log('Dropdown btn clicked.');
-			$('div.advanced-options').toggle();
+			$('div.advanced-options').slideToggle();
 	});
 }
 

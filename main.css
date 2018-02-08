@@ -7,7 +7,7 @@ footer {
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 1rem;
+    padding: .5rem;
     background-color: #efefef;
     opacity: 0.8;
     text-align: center;
@@ -23,8 +23,9 @@ legend {
 }
 
 .advanced-options {
+    display: none;
     background-color: lightgray;
-    opacity: 0.8;
+    text-align: center;
 }
 
 .fa .fa-arrows-v {
@@ -54,9 +55,19 @@ legend {
     padding-top: 10px;
 }
 
+.results {
+    background-color: #efefef;
+}
+
 .results-container {
-    background-color: lightgray;
+    position: absolute;
+    display: none;
+    right: 0;
+    bottom: 1.5rem;
+    left: 0;
+    padding: .5rem;
     opacity: 0.8;
+    text-align: center;
 }
 
 .search-box {
@@ -67,12 +78,18 @@ legend {
     border-radius: 5px;
 }
 
-.search-form-advanced-options {
+.advanced-options-panel {
     text-align: center;
+    opacity: 0.8;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.search-form-transit-times {
+.transit-times-panel {
     text-align: center;
+    opacity: 0.8;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .submit-btn  {
