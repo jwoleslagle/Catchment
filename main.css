@@ -7,8 +7,13 @@ footer {
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 1rem;
+    padding: .5rem;
     background-color: #efefef;
+    opacity: 0.8;
+    text-align: center;
+}
+
+h3 {
     text-align: center;
 }
 
@@ -17,32 +22,78 @@ legend {
     font-weight: bold;
 }
 
-h3 {
+.advanced-options {
+    display: none;
+    background-color: lightgray;
     text-align: center;
+}
+
+.fa .fa-arrows-v {
+    font-size: 24px;
+}
+
+.fa .fa-map-marker {
+    font-size: 24px;
+}
+
+.geolocate-btn {
+    background-color: royalblue;
+    opacity: 1.0;
+}
+
+.map_canvas {
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
 }
 
 .parent-container {
     display: flex;
-    background-color: lightgray;
     padding-top: 10px;
 }
 
 .results {
-    background-color: lightgray;
+    background-color: #efefef;
+}
+
+.results-container {
+    position: absolute;
+    display: none;
+    right: 0;
+    bottom: 1.5rem;
+    left: 0;
+    padding: .5rem;
+    opacity: 0.8;
+    text-align: center;
 }
 
 .search-box {
     text-align: center;
     background-color: lightgray;
+    opacity: 0.8;
     padding: 10px;
+    border-radius: 5px;
 }
 
-.search-form-advanced-options {
+.advanced-options-panel {
     text-align: center;
+    opacity: 0.8;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.search-form-transit-times {
+.transit-times-panel {
     text-align: center;
+    opacity: 0.8;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.submit-btn  {
+    opacity: 1.0;
 }
 
 .text-center {
