@@ -50,42 +50,47 @@
                             <div class="advanced-options-panel">
                                 <form action="#" class="js-search-form-advanced-options">
                                     <fieldset>
-                                        <legend>Advanced results</legend>
+                                        <legend>Include in results</legend>
                                         <div>
                                             <input type="checkbox" id="option1" name="searchOption" value="option1">
-                                            <label for="option1">Option 1</label>
+                                            <label for="option1">County Comparison</label>
                                         </div>
                                         <div>
                                             <input type="checkbox" id="option2" name="searchOption" value="option2">
-                                            <label for="option2">Option 2</label>
+                                            <label for="option2">State Comparison</label>
                                         </div>
                                         <div>
                                             <input type="checkbox" id="option3" name="searchOption" value="option3">
-                                            <label for="option3">Option 3</label>
-                                        </div>
-                                        <div>
-                                            <input type="checkbox" id="option4" name="searchOption" value="option4">
-                                            <label for="option4">Option 4</label>
+                                            <label for="option3">National Comparison</label>
                                         </div>
                                     </fieldset>
                                 </form>
                             </div>
 
                             <div class="transit-times-panel">
+                                <div role="listbox" class="js-search-form-transit-types">
+                                    <legend>Transit type:</legend>
+                                    <select name="carlist" form="carform">
+                                        <option value="volvo">Car</option>
+                                        <option value="saab">Walk</option>
+                                        <option value="opel">Bike</option>
+                                        <option value="audi">Transit</option>
+                                    </select>
+                                </div>
                                 <form action="#" class="js-search-form-transit-times">
                                     <fieldset>
-                                        <legend>Transit Times</legend>
+                                        <legend>Transit Times (in minutes):</legend>
                                         <div>
-                                            <label for="option5">Option 5: </label>
-                                            <input type="text" id="option5" name="searchOption" size= "4" maxsize="4" value="1234">
+                                            <label for="option5">Short: </label>
+                                            <input type="text" id="option5" name="searchOption" size= "4" maxsize="4" value="10">
                                         </div>
                                         <div>
-                                            <label for="option6">Option 6: </label>
-                                            <input type="text" id="option6" name="searchOption" size= "4" maxsize="4" value="1234">
+                                            <label for="option6">Mid: </label>
+                                            <input type="text" id="option6" name="searchOption" size= "4" maxsize="4" value="20">
                                         </div>
                                         <div>
-                                            <label for="option7">Option 7: </label>
-                                            <input type="text" id="option7" name="searchOption" size= "4" maxsize="4" value="1234">
+                                            <label for="option7">Long: </label>
+                                            <input type="text" id="option7" name="searchOption" size= "4" maxsize="4" value="30">
                                         </div>
                                     </fieldset>
                                 </form>
