@@ -29,18 +29,13 @@ server.get("/ac5_tract", (req, res) => {
   const params = req.query
 
   const url =
-    "https://api.census.gov/data/2016/acs/acs5?get=B00001_001E,B00002_001E,B20002_001E,B25012_002E&for=tract:" + params.tract + "$in=state:" + params.stateCode + "%20county:" + params.county + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
+    "https://api.census.gov/data/2016/acs/acs5?get=NAME,B01001_001E,B01001_002E,B01001_026E,B25001_001E,B20002_001E,B25003_002E&for=tract:" + params.tract + "$in=state:" + params.stateCode + "%20county:" + params.county + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
 
-  axios
+    axios
     .get(url)
     .then(apiRes => {
-      let tractResult = {
-        totalPop: apiRes.data[1].B00001_001E,
-        totalHousingUnits: apiRes.data[1].B00002_001E,
-        medianIncome: apiRes.data[1].B20002_001E,
-        ownerOccupiedHousingUnits: apiRes.data[1].B25012_002E
-      }
-      res.json(tractResult)
+      const results = censusResultToObj(apiRes.data)    
+      res.json(results)
     })
     .catch(err => {
       res.json({ error: err })
@@ -51,18 +46,13 @@ server.get("/ac5_county", (req, res) => {
   const params = req.query
 
   const url =
-    "https://api.census.gov/data/2016/acs/acs5?get=B00001_001E,B00002_001E,B20002_001E,B25012_002E&for=county:" + params.county + "$in=state:" + params.stateCode + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
+    "https://api.census.gov/data/2016/acs/acs5?get=NAME,B01001_001E,B01001_002E,B01001_026E,B25001_001E,B20002_001E,B25003_002E&for=county:" + params.county + "$in=state:" + params.stateCode + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
 
-  axios
+    axios
     .get(url)
-    .then(data => {
-      let countyResult = {
-        totalPop: data[1].B00001_001E,
-        totalHousingUnits: data[1].B00002_001E,
-        medianIncome: data[1].B20002_001E,
-        ownerOccupiedHousingUnits: data[1].B25012_002E
-      }
-      res.json(countyResult)
+    .then(apiRes => {
+      const results = censusResultToObj(apiRes.data)    
+      res.json(results)
     })
     .catch(err => {
       res.json({ error: err })
@@ -73,18 +63,13 @@ server.get("/ac5_state", (req, res) => {
   const params = req.query
 
   const url =
-    "https://api.census.gov/data/2016/acs/acs5?get=B00001_001E,B00002_001E,B20002_001E,B25012_002E&for=state:" + params.stateCode + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
+    "https://api.census.gov/data/2016/acs/acs5?get=NAME,B01001_001E,B01001_002E,B01001_026E,B25001_001E,B20002_001E,B25003_002E&for=state:" + params.stateCode + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
 
-  axios
+    axios
     .get(url)
-    .then(data => {
-      let stateResult = {
-        totalPop: data[1].B00001_001E,
-        totalHousingUnits: data[1].B00002_001E,
-        medianIncome: data[1].B20002_001E,
-        ownerOccupiedHousingUnits: data[1].B25012_002E
-      }
-      res.json(stateResult)
+    .then(apiRes => {
+      const results = censusResultToObj(apiRes.data)    
+      res.json(results)
     })
     .catch(err => {
       res.json({ error: err })
