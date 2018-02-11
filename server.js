@@ -23,75 +23,13 @@ server.get("/fips", (req, res) => {
     })
 })
 
-server.get("/ac5_tract", (req, res) => {
-	const params = req.query
-		//Example URL: "https://api.census.gov/data/2016/acs/acs5/subject?get=NAME,S0101_C01_001E,S0101_C02_001E,S0101_C03_001E,S0601_C01_047E,S0101_C01_002E,S0101_C01_020E,S0101_C01_021E,S0101_C01_015E,S0101_C01_016E,S0101_C01_017E,S0101_C01_018E,S0101_C01_019E,S2501_C01_001E,S2501_C02_001E&for=tract:000100&in=state:01%20county:073&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3
-  const url =
-		"https://api.census.gov/data/2016/acs/acs5/subject?get=NAME,S0101_C01_001E,S0101_C02_001E,S0101_C03_001E,S0601_C01_047E,S0101_C01_002E,S0101_C01_020E,S0101_C01_021E,S0101_C01_015E,S0101_C01_016E,S0101_C01_017E,S0101_C01_018E,S0101_C01_019E,S2501_C01_001E,S2501_C02_001E&for=tract:" + params.tract + "&in=state:" + params.state + "%20county:" + params.county + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
-  const results = {}
-  
+server.get("/census", (req, res) => {
+  const url = req.query.url
   axios
     .get(url)
     .then(apiRes => {
 			const data = censusResultToObj(apiRes.data)
-      results.tract = data
-      debugger
-      res.json(results)
-    })
-    .catch(err => {
-      res.json({ error: err })
-    })
-})
-
-server.get("/ac5_county", (req, res) => {
-  const params = req.query
-
-  const url =
-    "https://api.census.gov/data/2016/acs/acs5/subject?get=NAME,S0101_C01_001E,S0101_C02_001E,S0101_C03_001E,S0601_C01_047E,S0101_C01_002E,S0101_C01_020E,S0101_C01_021E,S0101_C01_015E,S0101_C01_016E,S0101_C01_017E,S0101_C01_018E,S0101_C01_019E,S2501_C01_001E,S2501_C02_001E&for=county:" + params.county + "&in=state:" + params.state + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
-  const results = {}
-  
-  axios
-    .get(url)
-    .then(apiRes => {
-			const data = censusResultToObj(apiRes.data)
-			results.county = data 
-      res.json(results)
-    })
-    .catch(err => {
-      res.json({ error: err })
-  })
-})
-
-server.get("/ac5_state", (req, res) => {
-  const params = req.query
-
-  const url =
-    "https://api.census.gov/data/2016/acs/acs5/subject?get=NAME,S0101_C01_001E,S0101_C02_001E,S0101_C03_001E,S0601_C01_047E,S0101_C01_002E,S0101_C01_020E,S0101_C01_021E,S0101_C01_015E,S0101_C01_016E,S0101_C01_017E,S0101_C01_018E,S0101_C01_019E,S2501_C01_001E,S2501_C02_001E&for=state:" + params.state + "&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
-  const results = {}
-
-  axios
-    .get(url)
-    .then(apiRes => {
-			const data = censusResultToObj(apiRes.data)
-			results.state = data 
-      res.json(results)
-    })
-    .catch(err => {
-      res.json({ error: err })
-  })
-})
-
-server.get("/ac5_national", (req, res) => {
-	const url = 
-		"https://api.census.gov/data/2016/acs/acs5/subject?get=NAME,S0101_C01_001E,S0101_C02_001E,S0101_C03_001E,S0601_C01_047E,S0101_C01_002E,S0101_C01_020E,S0101_C01_021E,S0101_C01_015E,S0101_C01_016E,S0101_C01_017E,S0101_C01_018E,S0101_C01_019E,S2501_C01_001E,S2501_C02_001E&for=us&key=37ff14711f40a5b4b3f6d39f773e687047ea6ce3"
-	const results = {}
-
-  axios
-    .get(url)
-    .then(apiRes => {
-			const data = censusResultToObj(apiRes.data)
-			results.national = data 
-      res.json(results)
+      res.json(data)
     })
     .catch(err => {
       res.json({ error: err })
@@ -135,7 +73,7 @@ function censusCalcAndCleanup(obj) {
 		return obj
 }
 
-function censusResultToObj(data) {
+function censusResultToObj(data) { 
   // Loop through results, using [0] as header for [1]
   let object = {}
   for(let i=0; i < data[0].length;i++){
@@ -144,9 +82,7 @@ function censusResultToObj(data) {
     header = censusHeaderLookup(header);
     object[`${header}`] = val
   }
-
 	censusCalcAndCleanup(object)
-
   //return resulting obj
   return object
 }

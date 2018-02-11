@@ -29,12 +29,12 @@
         <div class="container-fluid">
             <div id="map_canvas" class="map_canvas"></div>
             <div class="row">
-                <div class="col-sm-8 mx-auto">
+                <div class="col-lg-5 mx-auto">
                     <div class="search-box">
-                        <h4>Catchment: A Neighborhood Browser</h4>
+                        <h4>Catchment: A Neighborhood Explorer</h4>
                         <form id="js-search-form">
                             <span class="left-align">
-                            <label for="query">Enter an address (US address required for census data):</span></label><br />
+                            <label for="query">Enter an address (US address req'd for census info):</span></label><br />
                             <input type="text" name="location-entry" class="js-location-entry" size="40" placeholder="1094 Commerce Dr., Falls Church, VA" aria-label="search-location" /></span>
                             <button type="submit" class="submit-btn" aria-label="submit">Search</button><br />
                             <div class="secondary-btns">
@@ -60,11 +60,11 @@
                                 <fieldset>
                                     <legend>Compare local results with:</legend>
                                     <div class="radio-options">
-                                        <input id="county" type="radio" name="comparison" value="county" checked="checked">
+                                        <input id="county" type="radio" name="compLocale" value="county" checked="checked">
                                         <label for="county">County</label><br>
-                                        <input id="state" type="radio" name="comparison" value="state">
+                                        <input id="state" type="radio" name="compLocale" value="state">
                                         <label for="state">State</label><br>
-                                        <input id="national" type="radio" name="national" value="national">
+                                        <input id="national" type="radio" name="compLocale" value="national">
                                         <label for="national">National</label>
                                     </div>
                                 </fieldset>
@@ -94,7 +94,7 @@
             </div>
                 
             <div class="results-container row">
-                <div class="col-sm-10 mx-auto">
+                <div class="col-lg-8 mx-auto">
 					<div class="results"></div>
                 </div>
             </div>
