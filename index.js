@@ -7,16 +7,36 @@ let pos = {
 let markersArray = [];
 let FIPS = {};
 
+const numberWithCommas = (x) => {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
 function initMap() {
 	console.log('initMap ran.');
 	geocoder = new google.maps.Geocoder();
 	let latlng = new google.maps.LatLng(pos.lat, pos.lng); 
 	let mapOptions = {
 		zoom: 4,
-		center: pos
+		center: pos,
+		mapTypeControl: true,
+		mapTypeControlOptions: {
+			position: google.maps.ControlPosition.LEFT_TOP
+		},
+		zoomControl: true,
+		zoomControlOptions: {
+			position: google.maps.ControlPosition.RIGHT_TOP
+		},
+		scaleControl: true,
+		streetViewControl: true,
+		streetViewControlOptions: {
+			position: google.maps.ControlPosition.RIGHT_TOP
+		},
+		fullscreenControl: false
 		}
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 }
+
+
 
 function clearOverlays() {
   for (var i = 0; i < markersArray.length; i++ ) {
@@ -32,18 +52,50 @@ function codeAddress(address) {
 			pos.lat = results[0].geometry.location.lat();
 			pos.lng = results[0].geometry.location.lng();
 			dropMarker();
-			$('button.clear-markers-btn').prop('disabled', false);
+			$('button.results-toggle-btn').prop('disabled', false);
 		} else {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
 	});
 }
 
-function displayResults() {
+function displayResults(censusData) {
+	console.log(`displayResults ran with ${censusData.tract.scope}.`);
 	let resultsString = `
-		<p>Current position is ${pos.lat}, ${pos.lng}.<br />
-		Current FIPS ID is ${FIPS.FIPS}.</p>
-		`;
+		<div class="results-outer">
+			<div class="center-it">Travel time: <span class="short-cube"></span> 10 min    <span class="medium-cube"></span> 20 min    <span class="long-cube"></span> 30 min</div>
+			<div class="center-it">${censusData.tract.housingTotalOccupied} residences nearby in ${censusData.tract.scope}:</div>
+				<div class="results-inner">
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Population:</div>
+								Total: ${numberWithCommas(censusData.tract.populationTotal)}<br />
+								Male: ${censusData.tract.popMalePct}%<br />
+								Female: ${censusData.tract.popFemalePct}%<br />
+						</div>
+					</div>
+
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Demographics:</div>
+								Youth: ${censusData.tract.popYouthPct}%<br />
+								Adults: ${censusData.tract.popAdultPct}%<br />
+								Seniors: ${censusData.tract.popSeniorsPct}%<br />
+						</div>
+					</div>
+
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Household Info:</div>
+								Household Size: ${censusData.tract.householdSize}<br />
+								Median Income: $${numberWithCommas(censusData.tract.medianHouseholdIncome)}</br>
+								Home Ownership: ${censusData.tract.homeownerPct} %</br>
+						</div>
+					</div>
+				</div>
+				<p class="small-text center-it">Current position is ${pos.lat}, ${pos.lng}. Current FIPS ID is ${FIPS.FIPS}.</p>
+			</div>`;
+
 	$('div.results').html(resultsString);
 	$('div.results-container').slideDown("slow");
 }
@@ -59,7 +111,7 @@ function dropMarker() {
 	colorPolygonLayer = r360.googleMapsPolygonLayer(map);
 	showPolygons();
 	//google.maps.event.addListener(marker,"click",function(){});
-	$('button.clear-markers-btn').prop('disabled', false);
+	$('button.results-toggle-btn').prop('disabled', false);
 	google.maps.event.addListener(marker, 'dragend', function(event) {	
 		pos.lat = event.latLng.lat();
 		pos.lng = event.latLng.lng();
@@ -70,7 +122,7 @@ function dropMarker() {
 		});
 	let infoWindow = new google.maps.InfoWindow;
 	infoWindow.setPosition(pos);
-	infoWindow.setContent('Closest location found.');
+	infoWindow.setContent('Drag and drop me!');
 	setTimeout(function () { infoWindow.open(map); }, 1000);
 	setTimeout(function () { infoWindow.close(); }, 3000);
 
@@ -83,28 +135,29 @@ function dropMarker() {
 function generateFIPSObj(longFIPS) {
 	console.log(`generateFIPSObj ran with FIPS ID: ${longFIPS}.`);
 	FIPS.FIPS = longFIPS;
-	FIPS.stateFIPS = longFIPS.substr(0, 2); 
-	FIPS.countyFIPS = longFIPS.substr(2, 3);
+	FIPS.state = longFIPS.substr(0, 2); 
+	FIPS.county = longFIPS.substr(2, 3);
 	FIPS.tract = longFIPS.substr(5, 6);
 	FIPS.blockGroup = longFIPS.substr(11, 1);
 	FIPS.block = longFIPS.substr(11, 4);
 	console.log(FIPS);
-	displayResults();
+	getCensusTract(FIPS);
 }
 
 function getFIPS() {
-	let basicFIPS = '';
 	let query = {
 		Lat: pos.lat,
 		Lng: pos.lng	};
-	$.get("/api", query, generateFIPSObj);
+	$.get("/fips", query, generateFIPSObj);
 }
 
-function handleClearMarkersPress() {
-	$('button.clear-markers-btn').on('click', (e) => {
-		console.log('Clear markers button pressed.');
-		clearOverlays();
-	});
+function getCensusTract(fips) {
+	console.log(`getCensusTract ran with ${fips.tract}.`);
+	let query = {
+		tract: fips.tract,
+		county: fips.county,
+		state: fips.state	};
+	$.get("/ac5_tract", query, displayResults);
 }
 
 function handleGeolocatePress() {
@@ -124,7 +177,7 @@ function handleGeolocatePress() {
 					reverseGeocode();
 					dropMarker();
 				}, function() {
-					handleLocationError(true, infoWindow, map.getCenter());
+					handleGeolocationError(true, infoWindow, map.getCenter());
 				}, options);
 			} else {
 			// Browser doesn't support Geolocation
@@ -165,38 +218,66 @@ function reverseGeocode() {
   });
 }
 
-function watchAdvOptionsDropdown() {
-	console.log('watchAdvOptionsDropdown ran.');
-	$('button.dropdown-btn').on('click', (e) => {
-			console.log('Dropdown btn clicked.');
-			$('div.advanced-options').slideToggle();
+function watchResultsToggle() {
+	console.log('watchResultsToggle ran.');
+	$('button.results-toggle-btn').on('click', (e) => {
+			console.log('Results toggle btn clicked.');
+			$('div.results-container').slideToggle();
+	});
+}
+
+function watchOptionsToggle() {
+	console.log('watchOptionsDropdown ran.');
+	$('button.options-toggle-btn').on('click', (e) => {
+			console.log('Options toggle btn clicked.');
+			$('div.options-container').slideToggle();
 	});
 }
 
 function renderStartPage() {
+	$('button.results-toggle-btn').prop('disabled', true);
 	initMap();
-	watchAdvOptionsDropdown();
-	$('button.clear-markers-btn').prop('disabled', true);
 	handleSearchSubmit();
 	handleGeolocatePress();
-	handleClearMarkersPress();
+	watchOptionsToggle();
+	watchResultsToggle();
 }
 
 function showPolygons() {
 	console.log('showPolygons ran.');
 	let travelOptions = r360.travelOptions();
+	
+	let time = new Date();
+	let currentTimeInSeconds = ((time.getHours() * 60) + time.getMinutes()) * 60
+	let currentDate = String(time.getFullYear()) + (Number(time.getMonth()) < 10 ? 0 : '') + String(time.getMonth()+1) + String(time.getDate())
+
+	let transitType = $('#js-search-form-transit-type').val();
+
+	let travelTimes = [600, 1200, 1800];
+
 	travelOptions.setServiceKey("9R3ACENBBE1POU85N7PVMSR");
 	travelOptions.setServiceUrl("https://service.route360.net/northamerica/");
 	travelOptions.addSource({ lat: pos.lat, lng: pos.lng });
-	travelOptions.setTravelTimes([600, 1200, 1800]);
-	travelOptions.setTravelType("car");
-	travelOptions.setDate("20150706");
-	travelOptions.setTime("39000");
+	travelOptions.setTravelTimes(travelTimes);
+	travelOptions.setTravelType(transitType);
+	travelOptions.setDate(currentDate);
+	travelOptions.setTime(currentTimeInSeconds);
 
 	// call the service
 	r360.PolygonService.getTravelTimePolygons(travelOptions,
 		function(polygons) {
 			colorPolygonLayer.update(polygons);
+			//Map colors changed to greens and purples for color-blind accessibility.
+			colorPolygonLayer.setColors([{
+				'time': 600,
+				'color': '#405d27'
+			  }, {
+				'time': 1200,
+				'color': '#e9a3c9'
+			  }, {
+				'time': 1800,
+				'color': '#af8dc3'
+			  }, ]);
 		},
 		function(status, message) {
 			console.log("The route360 API is not available - double check your configuration options.");
@@ -208,3 +289,4 @@ console.log('App started.');
 $(renderStartPage);
 
 // Code parking lot
+

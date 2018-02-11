@@ -29,71 +29,63 @@
         <div class="container-fluid">
             <div id="map_canvas" class="map_canvas"></div>
             <div class="row">
-                <div class="col-sm-6 mx-auto">
+                <div class="col-sm-8 mx-auto">
                     <div class="search-box">
-                        <h3>Catchment Logo</h3>
+                        <h4>Catchment: A Neighborhood Browser</h4>
                         <form id="js-search-form">
-                            <label for="query">Enter a US address:</label><br />
-                            <input type="text" name="location-entry" class="js-location-entry" size="50%" placeholder="ex. 1094 Commerce Dr., Falls Church, VA" aria-label="search-location" />
-                            <button type="submit" class="submit-btn" aria-label="submit">Search</button>
-                            <button type="button" class="geolocate-btn" aria-label="geolocate"><i class="fa fa-map-marker"></i> Geolocate</button>
+                            <span class="left-align">
+                            <label for="query">Enter an address (US address required for census data):</span></label><br />
+                            <input type="text" name="location-entry" class="js-location-entry" size="40" placeholder="1094 Commerce Dr., Falls Church, VA" aria-label="search-location" /></span>
+                            <button type="submit" class="submit-btn" aria-label="submit">Search</button><br />
+                            <div class="secondary-btns">
+                                <button type="button" class="geolocate-btn" aria-label="geolocate"><i class="fa fa-map-marker"></i> My Location</button>
+                                <button type="button" class="options-toggle-btn" aria-label="options-dropdown"><i class="fa fa-arrows-v"></i> Options</button>
+                                <button type="button" class="results-toggle-btn" aria-label="census-results-toggle"><i class="fa fa-arrows-v"></i> Census Results</button>
+                            </div>
                         </form>
-                        <br />
-                        <div class="dropdown-btn-container">
-                          <button type="button" class="dropdown-btn" aria-label="advanced-options-dropdown"><i class="fa fa-arrows-v"></i> Toggle Advanced Options</button>
-													<button type="button" class="clear-markers-btn" aria-label="clear-map-markers">Clear Markers</button>
-												</div>
                     </div>
 
                     <div class="row">
-                        <div class="advanced-options col-sm-10 mx-auto">
-                            <div class="advanced-options-panel">
-                                <form action="#" class="js-search-form-advanced-options">
-                                    <fieldset>
-                                        <legend>Include in results</legend>
-                                        <div>
-                                            <input type="checkbox" id="option1" name="searchOption" value="option1">
-                                            <label for="option1">County Comparison</label>
-                                        </div>
-                                        <div>
-                                            <input type="checkbox" id="option2" name="searchOption" value="option2">
-                                            <label for="option2">State Comparison</label>
-                                        </div>
-                                        <div>
-                                            <input type="checkbox" id="option3" name="searchOption" value="option3">
-                                            <label for="option3">National Comparison</label>
-                                        </div>
-                                    </fieldset>
-                                </form>
-                            </div>
-
-                            <div class="transit-times-panel">
-                                <div role="listbox" class="js-search-form-transit-types">
-                                    <legend>Transit type:</legend>
-                                    <select name="carlist" form="carform">
-                                        <option value="volvo">Car</option>
-                                        <option value="saab">Walk</option>
-                                        <option value="opel">Bike</option>
-                                        <option value="audi">Transit</option>
-                                    </select>
-                                </div>
-                                <form action="#" class="js-search-form-transit-times">
-                                    <fieldset>
-                                        <legend>Transit Times (in minutes):</legend>
-                                        <div>
-                                            <label for="option5">Short: </label>
-                                            <input type="text" id="option5" name="searchOption" size= "4" maxsize="4" value="10">
-                                        </div>
-                                        <div>
-                                            <label for="option6">Mid: </label>
-                                            <input type="text" id="option6" name="searchOption" size= "4" maxsize="4" value="20">
-                                        </div>
-                                        <div>
-                                            <label for="option7">Long: </label>
-                                            <input type="text" id="option7" name="searchOption" size= "4" maxsize="4" value="30">
-                                        </div>
-                                    </fieldset>
-                                </form>
+                        <div class="options-container col-sm-6 mx-auto">
+                            <div class="options-panel">
+                                <fieldset>
+                                    <legend>Transit Type:
+                                    <select id="js-search-form-transit-type">
+                                        <option value="walk">Walk</option>
+                                        <option value="car">Car</option>
+                                        <option value="bike">Bike</option>
+                                        <option value="transit">Transit</option>
+                                    </select></legend>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Compare local results with:</legend>
+                                    <div class="radio-options">
+                                        <input id="county" type="radio" name="comparison" value="county" checked="checked">
+                                        <label for="county">County</label><br>
+                                        <input id="state" type="radio" name="comparison" value="state">
+                                        <label for="state">State</label><br>
+                                        <input id="national" type="radio" name="national" value="national">
+                                        <label for="national">National</label>
+                                    </div>
+                                </fieldset>
+                                
+                                 <!--Route360 API limits to 30 min max, so it didn't make sense to make this a user-editable thing
+                                <div class="transit-times-options">
+                                    <legend>Transit Times (in minutes):</legend>
+                                    <div>
+                                        <label for="option5">Short Distance: </label>
+                                        <input type="text" id="option5" name="shortDistance" size= "4" maxsize="4" value="10">
+                                    </div>
+                                    <div>
+                                        <label for="option6">Medium Distance: </label>
+                                        <input type="text" id="option6" name="medDistance" size= "4" maxsize="4" value="20">
+                                    </div>
+                                    <div>
+                                        <label for="option7">Long Distance: </label>
+                                        <input type="text" id="option7" name="longDistance" size= "4" maxsize="4" value="30">
+                                    </div>
+                                </div>>
+                                -->
                             </div>
                         </div>
                     </div>
@@ -102,14 +94,18 @@
             </div>
                 
             <div class="results-container row">
-                <div class="col-sm-6 mx-auto">
+                <div class="col-sm-10 mx-auto">
 					<div class="results"></div>
                 </div>
             </div>
 
 			</main>
 
-			<footer role="contentinfo">This footer should be positioned at the bottom of the page.</footer>
+			<footer role="contentinfo">
+                <span class="small-text"><a href="https://www.route360.net"<img src="/images/route360.png" height="1em">Route360</a> | 
+                <a href="https://developers.google.com/maps/">Google Maps API</a> |
+                This product uses the <a href="https://www.census.gov/data/developers/data-sets/acs-5year.html">Census Bureau Data API</a> but is not endorsed or certified by the Census Bureau.</span>
+            </footer>
 
     </div>
     
