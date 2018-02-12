@@ -16,14 +16,14 @@ Options Available:
 
 Search Results:
 
-![search results page](screenshots/info_closeup.png)
+![search results page](screenshots/info_closeup.PNG)
 
 ## Built With
 
 ### Front-End
 * HTML
 * CSS
-* Bootstrap v4
+* Bootstrap
 
 ### Back-End
 * JQuery
@@ -43,4 +43,4 @@ Search Results:
 
 ## Authors
 
-* **Jeff Woleslagle** - ** - Design and development
+* **Jeff Woleslagle** - Design and development
