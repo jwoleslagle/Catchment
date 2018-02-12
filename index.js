@@ -1,7 +1,7 @@
-
 let geocoder, map, colorPolygonLayer;
 let pos = { lat: 41.2380564, lng: -96.1429296 };
-const markersArray = [];
+let markersArray = [];
+let placeMarkersArray = [];
 const FIPS = {};
 const censusData = {};
 
@@ -34,13 +34,18 @@ function initMap() {
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 }
 
+//Clears all markers (position and places) from map. Fix this to reset travel times overlay.
 function clearOverlays() {
-	for (var i = 0; i < markersArray.length; i++ ) {
-		markersArray[i].setMap(null);
-		}
-		markersArray.length = 0;
+	while(markersArray.length) { markersArray.pop().setMap(null); }
+	while(placeMarkersArray.length) { placeMarkersArray.pop().setMap(null); }
 }
 
+//Removes only place markers - needed for draggable position marker
+function clearPlaceMarkers() {
+	while(placeMarkersArray.length) { placeMarkersArray.pop().setMap(null); }
+}
+
+//converts coordinates to street address
 function codeAddress(address) {
 	console.log('codeAddress ran.');
 	geocoder.geocode( { 'address': address}, function(results, status) {
@@ -55,6 +60,7 @@ function codeAddress(address) {
 	});
 }
 
+//Adds appropriate predicate to census endpoint based on user's choice for data comparison
 function buildCensusEndpoint(locale) {
 	const baseURL =
 	"https://api.census.gov/data/2016/acs/acs5/subject?get=NAME,S0101_C01_001E,S0101_C02_001E,S0101_C03_001E,S0601_C01_047E,S0101_C01_002E,S0101_C01_020E,S0101_C01_021E,S0101_C01_015E,S0101_C01_016E,S0101_C01_017E,S0101_C01_018E,S0101_C01_019E,S2501_C01_001E,S2501_C02_001E&for="
@@ -77,13 +83,26 @@ function buildCensusEndpoint(locale) {
 	return url
 }
 
+//Populates bottom results panel with travel times legend and census info.
 function displayResults() {
+	//Abbreviate census prefixes for more concise code
 	let cmp = censusData.comp;
 	let lcl = censusData.local;
+	
+	//Get ID of place type for better readability (val is used for params)
+	let placeType = $('input[name=showPlace]:checked');
+	let placeTypeID = placeType.attr('id');
+
 	console.log(`displayResults ran with ${cmp.scope}.`);
 	let resultsString = `
 		<div class="results-outer">
-			<div class="center-it">Travel time (${$("#js-search-form-transit-type").val()}): <span class="short-cube"></span> 10 min    <span class="medium-cube"></span> 20 min    <span class="long-cube"></span> 30 min</div>
+			<div class="center-it legend" alt="Describes map overlay and symbols">
+				Travel time (${$("#js-search-form-transit-type").val()}): 
+				<span class="short-cube" alt="Color swatch for shortest travel time"></span> 10 min    
+				<span class="medium-cube" alt="Color swatch for medium travel time"></span> 20 min    
+				<span class="long-cube"></span> 30 min    
+				<span class="blue-circle"></span> ${placeTypeID}
+			</div>
 			<div class="center-it"><span class="bold-it">${numberWithCommas(lcl.housingTotalOccupied)}</span> residences nearby in ${lcl.scope}:</div>
 			<div class="small-text center-it">(Comparing with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}, comparisons in parentheses)</div>
 
@@ -91,7 +110,7 @@ function displayResults() {
 					<div class="results-panel">
 						<div class="data-indent">
 							<div class="bold-it">Population:</div>
-								Total: ${numberWithCommas(lcl.populationTotal)} (${(((lcl.populationTotal / cmp.populationTotal)*100)).toFixed(1)}% of total)<br />
+								Total: ${numberWithCommas(lcl.populationTotal)} (${(((lcl.populationTotal / cmp.populationTotal)*100)).toFixed(1)}% of ${numberWithCommas(cmp.populationTotal)})<br />
 
 								Male: ${lcl.popMalePct}% 
 								(<span class="${cmp.popMalePct > lcl.popMalePct ? "comp-higher" : (cmp.popMalePct < lcl.popMalePct ? "comp-lower" : "comp-equal")}">${censusData.comp.popMalePct}%</span>)<br />
@@ -121,10 +140,10 @@ function displayResults() {
 								Household Size: ${lcl.householdSize}
 								(<span class="${cmp.householdSize > lcl.householdSize ? "comp-higher" : (cmp.householdSize < lcl.householdSize ? "comp-lower" : "comp-equal")}">${cmp.householdSize}</span>)<br />
 
-								Median Income: $${numberWithCommas(lcl.medianHouseholdIncome)} 
+								Income: $${numberWithCommas(lcl.medianHouseholdIncome)} 
 								(<span class="${cmp.medianHouseholdIncome > lcl.medianHouseholdIncome ? "comp-higher" : (cmp.medianHouseholdIncome < lcl.medianHouseholdIncome ? "comp-lower" : "comp-equal")}">$${numberWithCommas(cmp.medianHouseholdIncome)}</span>)</br>
 								
-								Home Ownership: ${lcl.homeownerPct} (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}</span>)<br />
+								Home Ownership: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)<br />
 						</div>
 					</div>
 				</div>
@@ -135,6 +154,7 @@ function displayResults() {
 	$('div.results-container').slideDown("slow");
 }
 
+//Drops position marker (not places markers) on map and informs user that marker is draggable.
 function dropMarker() {
 	clearOverlays();
 	let marker = new google.maps.Marker({
@@ -145,6 +165,7 @@ function dropMarker() {
 	markersArray.push(marker);
 	colorPolygonLayer = r360.googleMapsPolygonLayer(map);
 	showPolygons();
+	dropPlacesMarkers();
 	//google.maps.event.addListener(marker,"click",function(){});
 	$('button.results-toggle-btn').prop('disabled', false);
 	google.maps.event.addListener(marker, 'dragend', function(event) {	
@@ -152,14 +173,16 @@ function dropMarker() {
 		pos.lng = event.latLng.lng();
 		map.setCenter(pos);
 		reverseGeocode();
+		clearPlaceMarkers();
 		showPolygons();
+		dropPlacesMarkers();
 		getFIPS();
 		});
 	let infoWindow = new google.maps.InfoWindow;
 	infoWindow.setPosition(pos);
 	infoWindow.setContent('Drag and droppable.');
 	setTimeout(function () { infoWindow.open(map); }, 1000);
-	setTimeout(function () { infoWindow.close(); }, 3000);
+	setTimeout(function () { infoWindow.close(); }, 2000);
 
 	map.setCenter(pos);
 	map.setZoom(15);
@@ -167,6 +190,54 @@ function dropMarker() {
 	getFIPS();
 }
 
+//triggers a set of Google Maps API functions that drop places on map based on type of user's input
+function dropPlacesMarkers() {
+	let placesInfoWindow = new google.maps.InfoWindow();
+	let service = new google.maps.places.PlacesService(map);
+	let type = $('input[name=showPlace]:checked').val();
+	service.nearbySearch({
+		location: pos,
+		radius: 1500,
+		type: [type]
+	}, placesCallback);
+}
+
+//callback required for Google Places API call
+function placesCallback(results, status) {
+	if (status === google.maps.places.PlacesServiceStatus.OK) {
+		for (let i = 0; i < results.length; i++) {
+		createPlaceMarker(results[i]);
+		}
+	}
+}
+
+//Puts place marker on map
+function createPlaceMarker(place) {
+	let placeLoc = place.geometry.location;
+	let placeMarker = new google.maps.Marker({
+		map: map,
+		position: place.geometry.location,
+		draggable: false,
+		animation: google.maps.Animation.DROP,
+		 icon: {
+			path: google.maps.SymbolPath.CIRCLE,
+			fillColor: '#00F',
+			fillOpacity: 0.6,
+			strokeColor: '#00A',
+			strokeOpacity: 0.9,
+			strokeWeight: 1,
+			scale: 7
+		}
+	});
+	placeMarkersArray.push(placeMarker);	
+	let placesInfoWindow = new google.maps.InfoWindow();
+	google.maps.event.addListener(placeMarker, 'click', function() {
+		placesInfoWindow.setContent(place.name);
+		placesInfoWindow.open(map, this);
+	});
+}
+
+//Deconstructs Census FIPS ID for use in queries
 function generateFIPSObj(longFIPS) {
 	console.log(`generateFIPSObj ran with FIPS ID: ${longFIPS}.`);
 	FIPS.FIPS = longFIPS;
@@ -178,6 +249,7 @@ function generateFIPSObj(longFIPS) {
 	getCensusLocalData();
 }
 
+//Gets FIPS ID from server based on coordinates provided.
 function getFIPS() {
 	let query = {
 		Lat: pos.lat,
@@ -185,6 +257,7 @@ function getFIPS() {
 	$.get("/fips", query, generateFIPSObj);
 }
 
+//Gets comparison data from Census API based on user preferences
 function getCensusComparisonData() {
 	console.log(`getCensusComparison ran.`);
 	let locale = $('input[name=compLocale]:checked').val();
@@ -194,6 +267,7 @@ function getCensusComparisonData() {
 	$.get("/census", query, processCensusDataStep2of2);
 }
 
+//Gets tract level census data from Census API. This is the smallest area possible for AC5 subject tables)
 function getCensusLocalData() {
 	console.log(`getCensusLocalData ran.`);
 	let locale = "tract";
@@ -202,16 +276,19 @@ function getCensusLocalData() {
 	$.get("/census", query, processCensusDataStep1of2);
 }
 
+//A ping-pong function which helps build the census results object. This is required for state control from getCensusLocalData.
 function processCensusDataStep1of2(data) {
 	censusData.local = data;
 	getCensusComparisonData();
 }
 
+//A ping-pong function which helps build the census results object. This is required for state control from getCensusComparisonData.
 function processCensusDataStep2of2(data) {
 	censusData.comp = data;
 	displayResults();
 }
 
+//Gets somewhat accurate coordinates for user from browser. Browser handles consent.
 function handleGeolocatePress() {
 	console.log('handleGeolocatePress ran.');
 	let options = {
@@ -238,6 +315,7 @@ function handleGeolocatePress() {
 		});
 }
 
+//Experimenting with the best way to handle geolocation errors, usually due to older browsers.
 function handleGeolocationError(browserHasGeolocation, infoWindow, pos) {
 	infoWindow.setPosition(pos);
 	infoWindow.setContent(browserHasGeolocation ?
@@ -246,6 +324,7 @@ function handleGeolocationError(browserHasGeolocation, infoWindow, pos) {
 	infoWindow.open(map);
 }
 
+//Sends user-provided address to codeAddress to get geo coordinates, needed to get FIPS and census data.
 function handleSearchSubmit() {
 	console.log('handleSearch ran.');
 	$('#js-search-form').submit(function(e) {
@@ -256,6 +335,7 @@ function handleSearchSubmit() {
 	});
 }
 
+//Determines an approximate street address for coordinates and displays it in the search field.
 function reverseGeocode() {
 	console.log('reverseGeocode ran.');
 	geocoder.geocode({'location': pos}, function(results, status) {
@@ -270,6 +350,7 @@ function reverseGeocode() {
 	});
 }
 
+//Shows and hides the census data container.
 function watchResultsToggle() {
 	console.log('watchResultsToggle ran.');
 	$('button.results-toggle-btn').on('click', (e) => {
@@ -278,6 +359,7 @@ function watchResultsToggle() {
 	});
 }
 
+//Shows and hides the options container.
 function watchOptionsToggle() {
 	console.log('watchOptionsDropdown ran.');
 	$('button.options-toggle-btn').on('click', (e) => {
@@ -286,6 +368,7 @@ function watchOptionsToggle() {
 	});
 }
 
+//Document ready callback function - powers the page.
 function renderStartPage() {
 	$('button.results-toggle-btn').prop('disabled', true);
 	initMap();
@@ -295,6 +378,7 @@ function renderStartPage() {
 	watchResultsToggle();
 }
 
+// Draws polygon travel times layer on base map.
 function showPolygons() {
 	console.log('showPolygons ran.');
 	let travelOptions = r360.travelOptions();

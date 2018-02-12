@@ -17,7 +17,7 @@
         <!--JQuery-->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <!-- Include Google Maps API -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_X-5DMfJFF_jbKvNcyXAE2zt32-2jDlI"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_X-5DMfJFF_jbKvNcyXAE2zt32-2jDlI&libraries=places"></script>
         <!--  Include r360.js -->
         <script src="https://releases.route360.net/r360-js/latest.js"></script>
 
@@ -32,9 +32,10 @@
                 <div class="col-lg-5 mx-auto">
                     <div class="search-box">
                         <h4>Catchment: A Neighborhood Explorer</h4>
-                        <form id="js-search-form">
+                        <form id="js-search-form" role="form">
+                            <!--Allows users to search for a location with a street address-->
                             <span class="left-align">
-                            <label for="query">Enter an address (US address req'd for census info):</span></label><br />
+                            <label for="query">Enter an address (US address required for census info):</span></label><br />
                             <input type="text" name="location-entry" class="js-location-entry" size="40" placeholder="1094 Commerce Dr., Falls Church, VA" aria-label="search-location" /></span>
                             <button type="submit" class="submit-btn" aria-label="submit">Search</button><br />
                             <div class="secondary-btns">
@@ -46,30 +47,57 @@
                     </div>
 
                     <div class="row">
-                        <div class="options-container col-sm-6 mx-auto">
+                        <div class="options-container col-md-8 mx-auto" aria-live="polite">
                             <div class="options-panel">
-                                <fieldset>
-                                    <legend>Transit Type:
-                                    <select id="js-search-form-transit-type">
-                                        <option value="walk">Walk</option>
-                                        <option value="car">Car</option>
-                                        <option value="bike">Bike</option>
-                                        <option value="transit">Transit</option>
-                                    </select></legend>
-                                </fieldset>
-                                <fieldset>
-                                    <legend>Compare local results with:</legend>
-                                    <div class="radio-options">
-                                        <input id="county" type="radio" name="compLocale" value="county" checked="checked">
-                                        <label for="county">County</label><br>
-                                        <input id="state" type="radio" name="compLocale" value="state">
-                                        <label for="state">State</label><br>
-                                        <input id="national" type="radio" name="compLocale" value="national">
-                                        <label for="national">National</label>
-                                    </div>
-                                </fieldset>
+                                <div role="listbox" aria-labelledby="transit-types-group">
+                                    <!--Allows user to choose travel type for polygon layer-->
+                                    <fieldset>
+                                        <legend id="transit-types-group">Transit Type:
+                                        <select id="js-search-form-transit-type">
+                                            <option value="walk">Walk</option>
+                                            <option value="car">Car</option>
+                                            <option value="bike">Bike</option>
+                                            <option value="transit">Transit</option>
+                                        </select></legend>
+                                    </fieldset>
+                                </div>
+                                <!--Determines scope of data for census comparison-->
+                                <div role="radiogroup" aria-labelledby="comparisons-radio-group">
+                                    <fieldset>
+                                        <legend id="comparisons-radio-group">Compare local with:</legend>
+                                        <div class="radio-options">
+                                            <input id="county" type="radio" name="compLocale" value="county" checked="checked">
+                                            <label for="county">County</label><br>
+                                            <input id="state" type="radio" name="compLocale" value="state">
+                                            <label for="state">State</label><br>
+                                            <input id="national" type="radio" name="compLocale" value="national">
+                                            <label for="national">National</label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <!--Determines place types shown on map-->
+                            <div class="options-panel">
+                                <div role="radiogroup" aria-labelledby="places-radio-group">
+                                    <fieldset>
+                                        <legend id="places-radio-group">Highlight on map:</legend>
+                                        <div class="radio-options">
+                                            <input id="Stores" type="radio" name="showPlace" value="store" checked="checked">
+                                            <label for="store">Stores</label><br>
+                                            
+                                            <input id="Restaurants" type="radio" name="showPlace" value="restaurant">
+                                            <label for="restaurant">Restaurants</label><br>
+                                            
+                                            <input id="Parks" type="radio" name="showPlace" value="park">
+                                            <label for="park">Parks</label><br>
+
+                                            <input id="Transit Stations" type="radio" name="showPlace" value="transit_station">
+                                            <label for="transit_station">Transit Stations</label><br>
+                                        </div>
+                                    </fieldset>
+                                </div>
                                 
-                                 <!--Route360 API limits to 30 min max, so it didn't make sense to make this a user-editable thing
+                                 <!--Route360 API limits to 30 min max, so it didn't make sense to make this a user-editable property
                                 <div class="transit-times-options">
                                     <legend>Transit Times (in minutes):</legend>
                                     <div>
@@ -92,8 +120,9 @@
 
                 </div>
             </div>
-                
-            <div class="results-container row">
+            
+            <!--Results container for travel times legend and census data-->
+            <div class="results-container row" aria-live="polite">
                 <div class="col-lg-8 mx-auto">
 					<div class="results"></div>
                 </div>
@@ -102,7 +131,8 @@
 			</main>
 
 			<footer role="contentinfo">
-                <span class="small-text"><a href="https://www.route360.net"<img src="/images/route360.png" height="1em">Route360</a> | 
+                <!--API attributions requested or required for use-->
+                <span class="small-text"><a href="https://www.route360.net"><img src="/images/route360.png" alt="Route 360 API logo" class="tiny-logo">Route360</a> | 
                 <a href="https://developers.google.com/maps/">Google Maps API</a> |
                 This product uses the <a href="https://www.census.gov/data/developers/data-sets/acs-5year.html">Census Bureau Data API</a> but is not endorsed or certified by the Census Bureau.</span>
             </footer>

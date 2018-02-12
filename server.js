@@ -4,7 +4,10 @@ const axios = require("axios")
 const server = express()
 
 server.use(express.static("."))
+//Image route allows page to serve Route 360 attribution image (required)
+server.use('/images', express.static(__dirname + '/images'));
 
+//Gets FIPS ID from geo coordinates from FCC API - this API seems faster and cleaner for this purpose than the census geocoder.
 server.get("/fips", (req, res) => {
   // Example query: http://data.fcc.gov/api/block/find?format=json&latitude=41.2380564&longitude=-96.1429296&showall=true
   const params = req.query
@@ -23,6 +26,7 @@ server.get("/fips", (req, res) => {
     })
 })
 
+//Gets data from census API based on FIPS ID components. This function is re-used for both local and comparison queries.
 server.get("/census", (req, res) => {
   const url = req.query.url
   axios
@@ -42,6 +46,7 @@ server.listen(PORT, () => {
   console.log(`Server http://localhost:${PORT}`)
 })
 
+//Adds calculated properties to the census data and removes unused properties.
 function censusCalcAndCleanup(obj) {
 	  //Calculated properties
 		obj.homeownerPct = (obj.housingOwnerOccupied / obj.housingTotalOccupied * 100).toFixed(1)
@@ -73,6 +78,7 @@ function censusCalcAndCleanup(obj) {
 		return obj
 }
 
+//Census data is provided in a non-standard array of comma-separated values with hard-to-parse index headers. This function shapes the data into a standard JSON format and provides human-readable headers for easier code comprehension. 
 function censusResultToObj(data) { 
   // Loop through results, using [0] as header for [1]
   let object = {}
@@ -87,6 +93,7 @@ function censusResultToObj(data) {
   return object
 }
 
+//An object literal which assigns human-readable headers in place of the census header indices. Object literals seem to provide better performance than switches and if-else statements.
 function censusHeaderLookup(hdr) {
   const censusHdrLiteral = {
     "NAME": "scope",

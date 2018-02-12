@@ -9,7 +9,7 @@ footer {
     left: 0;
     padding: .5rem;
     background-color: black;
-    opacity: 0.7;
+    opacity: 0.9;
     color: white;
     text-align: center;
     line-height: 1;
@@ -33,11 +33,11 @@ legend {
 }
 
 .comp-higher {
-    color: green;
+    color: chartreuse ;
 }
 
 .comp-lower {
-    color: red;
+    color: crimson;
 }
 
 .comp-equal {
@@ -78,15 +78,15 @@ legend {
 .options-container {
     display: none;
     background-color: black;
-    opacity: 0.7;
+    opacity: 0.9;
     color: white;
     text-align: center;
+    border-radius: 10px;
 }
 
 .options-panel {
     display: inline-block;
     vertical-align: top;
-    border-radius: 5px;
 }
 
 .parent-container {
@@ -102,16 +102,16 @@ legend {
 
 .results {
     background-color: black;
-    opacity: 0.7;
+    opacity: 0.9;
     color: white;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .results-container {
     position: absolute;
     display: none;
     right: 0;
-    bottom: .75rem;
+    bottom: 2em;
     left: 0;
     padding: .5rem;
     text-align: center;
@@ -143,10 +143,10 @@ legend {
 .search-box {
     text-align: center;
     background-color: black;
-    opacity: 0.7;
+    opacity: 0.9;
     color: white;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .secondary-btns {
@@ -155,6 +155,13 @@ legend {
 
 .small-text {
     font-size: .75em;
+}
+
+.tiny-logo {
+    position: relative;
+    bottom: 2px;
+    height: 20px;
+    padding: 3px;
 }
 
 .short-cube {
@@ -171,6 +178,14 @@ legend {
     width: 5%;
     border: 1px solid white;
     background-color: #e9a3c9;
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.blue-circle:before {
+    content: ' \25CF';
+    color: blue;
+    font-size: 35px;
     display: inline-block;
     margin-left: 15px;
 }
