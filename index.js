@@ -4,11 +4,15 @@ let markersArray = [];
 let placeMarkersArray = [];
 const FIPS = {};
 const censusData = {};
-
 const numberWithCommas = (x) => {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+////////////////////////////
+//// MAP LAYER FUNCTIONS
+////////////////////////////
+
+//InitMap creates the base layer of the Google Map and positions the controls
 function initMap() {
 	console.log('initMap ran.');
 	geocoder = new google.maps.Geocoder();
@@ -45,6 +49,10 @@ function clearPlaceMarkers() {
 	while(placeMarkersArray.length) { placeMarkersArray.pop().setMap(null); }
 }
 
+////////////////////////////
+//// LOCATION FINDING FUNCTIONS
+////////////////////////////
+
 //converts coordinates to street address
 function codeAddress(address) {
 	console.log('codeAddress ran.');
@@ -58,6 +66,45 @@ function codeAddress(address) {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
 	});
+}
+
+//Determines an approximate street address for coordinates and displays it in the search field.
+function reverseGeocode() {
+	console.log('reverseGeocode ran.');
+	geocoder.geocode({'location': pos}, function(results, status) {
+	if (status === 'OK') {
+		if (results[0]) {
+				console.log(`reverseGeocode results are ${results[0].formatted_address}.`)
+				$('.js-location-entry').val(results[0].formatted_address);
+		}
+	} else {
+		window.alert('Geocoder failed due to: ' + status);
+	}
+	});
+}
+
+////////////////////////////
+//// CENSUS DATA FUNCTIONS
+////////////////////////////
+
+//Gets FIPS ID from server based on coordinates provided.
+function getFIPS() {
+	let query = {
+		Lat: pos.lat,
+		Lng: pos.lng	};
+	$.get("/fips", query, generateFIPSObj);
+}
+
+//Deconstructs Census FIPS ID for use in queries
+function generateFIPSObj(longFIPS) {
+	console.log(`generateFIPSObj ran with FIPS ID: ${longFIPS}.`);
+	FIPS.FIPS = longFIPS;
+	FIPS.state = longFIPS.substr(0, 2); 
+	FIPS.county = longFIPS.substr(2, 3);
+	FIPS.tract = longFIPS.substr(5, 6);
+	FIPS.blockGroup = longFIPS.substr(11, 1);
+	FIPS.block = longFIPS.substr(11, 4);
+	getCensusLocalData();
 }
 
 //Adds appropriate predicate to census endpoint based on user's choice for data comparison
@@ -83,76 +130,40 @@ function buildCensusEndpoint(locale) {
 	return url
 }
 
-//Populates bottom results panel with travel times legend and census info.
-function displayResults() {
-	//Abbreviate census prefixes for more concise code
-	let cmp = censusData.comp;
-	let lcl = censusData.local;
-	
-	//Get ID of place type for better readability (val is used for params)
-	let placeType = $('input[name=showPlace]:checked');
-	let placeTypeID = placeType.attr('id');
-
-	console.log(`displayResults ran with ${cmp.scope}.`);
-	let resultsString = `
-		<div class="results-outer">
-			<div class="center-it legend" alt="Describes map overlay and symbols">
-				Travel time (${$("#js-search-form-transit-type").val()}): 
-				<span class="short-cube" alt="Color swatch for shortest travel time"></span> 10 min    
-				<span class="medium-cube" alt="Color swatch for medium travel time"></span> 20 min    
-				<span class="long-cube"></span> 30 min    
-				<span class="blue-circle"></span> ${placeTypeID}
-			</div>
-			<div class="center-it"><span class="bold-it">${numberWithCommas(lcl.housingTotalOccupied)}</span> residences nearby in ${lcl.scope}:</div>
-			<div class="small-text center-it">(Comparing with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}, comparisons in parentheses)</div>
-
-				<div class="results-inner">
-					<div class="results-panel">
-						<div class="data-indent">
-							<div class="bold-it">Population:</div>
-								Total: ${numberWithCommas(lcl.populationTotal)} (${(((lcl.populationTotal / cmp.populationTotal)*100)).toFixed(1)}% of ${numberWithCommas(cmp.populationTotal)})<br />
-
-								Male: ${lcl.popMalePct}% 
-								(<span class="${cmp.popMalePct > lcl.popMalePct ? "comp-higher" : (cmp.popMalePct < lcl.popMalePct ? "comp-lower" : "comp-equal")}">${censusData.comp.popMalePct}%</span>)<br />
-								
-								Female: ${lcl.popFemalePct}% 
-								(<span class="${cmp.popFemalePct > lcl.popFemalePct ? "comp-higher" : (cmp.popFemalePct < lcl.popFemalePct ? "comp-lower" : "comp-equal")}">${cmp.popFemalePct}%</span>)<br />
-						</div>
-					</div>
-
-					<div class="results-panel">
-						<div class="data-indent">
-							<div class="bold-it">Demographics:</div>
-								Youth: ${lcl.popYouthPct}% 
-								(<span class="${cmp.popYouthPct > lcl.popYouthPct ? "comp-higher" : (cmp.popYouthPct < lcl.popYouthPct ? "comp-lower" : "comp-equal")}">${cmp.popYouthPct}%</span>)<br />
-
-								Adults: ${lcl.popAdultPct}% 
-								(<span class="${cmp.popAdultPct > lcl.popAdultPct ? "comp-higher" : (cmp.popAdultPct < lcl.popAdultPct ? "comp-lower" : "comp-equal")}">${censusData.comp.popAdultPct}%</span>)<br />
-
-								Seniors: ${lcl.popSeniorsPct}%
-								(<span class="${cmp.popSeniorsPct > lcl.popSeniorsPct ? "comp-higher" : (cmp.popSeniorsPct < lcl.popSeniorsPct ? "comp-lower" : "comp-equal")}">${cmp.popSeniorsPct}%</span>)<br />
-						</div>
-					</div>
-
-					<div class="results-panel">
-						<div class="data-indent">
-							<div class="bold-it">Household Info:</div>
-								Household Size: ${lcl.householdSize}
-								(<span class="${cmp.householdSize > lcl.householdSize ? "comp-higher" : (cmp.householdSize < lcl.householdSize ? "comp-lower" : "comp-equal")}">${cmp.householdSize}</span>)<br />
-
-								Income: $${numberWithCommas(lcl.medianHouseholdIncome)} 
-								(<span class="${cmp.medianHouseholdIncome > lcl.medianHouseholdIncome ? "comp-higher" : (cmp.medianHouseholdIncome < lcl.medianHouseholdIncome ? "comp-lower" : "comp-equal")}">$${numberWithCommas(cmp.medianHouseholdIncome)}</span>)</br>
-								
-								Home Ownership: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)<br />
-						</div>
-					</div>
-				</div>
-				<p class="small-text center-it">Current position is ${pos.lat}, ${pos.lng}. Current FIPS ID is ${FIPS.FIPS}.</p>
-			</div>`;
-
-	$('div.results').html(resultsString);
-	$('div.results-container').slideDown("slow");
+//Gets tract level census data from Census API. This is the smallest area possible for AC5 subject tables)
+function getCensusLocalData() {
+	console.log(`getCensusLocalData ran.`);
+	let locale = "tract";
+	let query = {
+		url: buildCensusEndpoint(locale) };
+	$.get("/census", query, processCensusDataStep1of2);
 }
+
+//A ping-pong function which helps build the census results object. This is required for state control from getCensusLocalData.
+function processCensusDataStep1of2(data) {
+	censusData.local = data;
+	getCensusComparisonData();
+}
+
+//Gets comparison data from Census API based on user preferences
+function getCensusComparisonData() {
+	console.log(`getCensusComparison ran.`);
+	let locale = $('input[name=compLocale]:checked').val();
+	let query = {
+		url: buildCensusEndpoint(locale) };
+	
+	$.get("/census", query, processCensusDataStep2of2);
+}
+
+//A ping-pong function which helps build the census results object. This is required for state control from getCensusComparisonData.
+function processCensusDataStep2of2(data) {
+	censusData.comp = data;
+	displayResults();
+}
+
+////////////////////////////
+//// MAP MARKER AND OVERLAY FUNCTIONS
+////////////////////////////
 
 //Drops position marker (not places markers) on map and informs user that marker is draggable.
 function dropMarker() {
@@ -237,56 +248,52 @@ function createPlaceMarker(place) {
 	});
 }
 
-//Deconstructs Census FIPS ID for use in queries
-function generateFIPSObj(longFIPS) {
-	console.log(`generateFIPSObj ran with FIPS ID: ${longFIPS}.`);
-	FIPS.FIPS = longFIPS;
-	FIPS.state = longFIPS.substr(0, 2); 
-	FIPS.county = longFIPS.substr(2, 3);
-	FIPS.tract = longFIPS.substr(5, 6);
-	FIPS.blockGroup = longFIPS.substr(11, 1);
-	FIPS.block = longFIPS.substr(11, 4);
-	getCensusLocalData();
+// Draws polygon travel times layer on base map.
+function showPolygons() {
+	console.log('showPolygons ran.');
+	let travelOptions = r360.travelOptions();
+
+	let time = new Date();
+	let currentTimeInSeconds = ((time.getHours() * 60) + time.getMinutes()) * 60
+	let currentDate = String(time.getFullYear()) + (Number(time.getMonth()) < 10 ? 0 : '') + String(time.getMonth()+1) + String(time.getDate())
+
+	let transitType = $('#js-search-form-transit-type').val();
+
+	let travelTimes = [600, 1200, 1800];
+
+	travelOptions.setServiceKey("9R3ACENBBE1POU85N7PVMSR");
+	travelOptions.setServiceUrl("https://service.route360.net/northamerica/");
+	travelOptions.addSource({ lat: pos.lat, lng: pos.lng });
+	travelOptions.setTravelTimes(travelTimes);
+	travelOptions.setTravelType(transitType);
+	travelOptions.setDate(currentDate);
+	travelOptions.setTime(currentTimeInSeconds);
+
+	// call the service
+	r360.PolygonService.getTravelTimePolygons(travelOptions,
+		function(polygons) {
+			colorPolygonLayer.update(polygons);
+			//Map colors changed to greens and purples for color-blind accessibility.
+			colorPolygonLayer.setColors([{
+				'time': 600,
+				'color': '#405d27'
+				}, {
+				'time': 1200,
+				'color': '#e9a3c9'
+				}, {
+				'time': 1800,
+				'color': '#af8dc3'
+				}, ]);
+		},
+		function(status, message) {
+			console.log("The route360 API is not available - double check your configuration options.");
+		}
+	);
 }
 
-//Gets FIPS ID from server based on coordinates provided.
-function getFIPS() {
-	let query = {
-		Lat: pos.lat,
-		Lng: pos.lng	};
-	$.get("/fips", query, generateFIPSObj);
-}
-
-//Gets comparison data from Census API based on user preferences
-function getCensusComparisonData() {
-	console.log(`getCensusComparison ran.`);
-	let locale = $('input[name=compLocale]:checked').val();
-	let query = {
-		url: buildCensusEndpoint(locale) };
-	
-	$.get("/census", query, processCensusDataStep2of2);
-}
-
-//Gets tract level census data from Census API. This is the smallest area possible for AC5 subject tables)
-function getCensusLocalData() {
-	console.log(`getCensusLocalData ran.`);
-	let locale = "tract";
-	let query = {
-		url: buildCensusEndpoint(locale) };
-	$.get("/census", query, processCensusDataStep1of2);
-}
-
-//A ping-pong function which helps build the census results object. This is required for state control from getCensusLocalData.
-function processCensusDataStep1of2(data) {
-	censusData.local = data;
-	getCensusComparisonData();
-}
-
-//A ping-pong function which helps build the census results object. This is required for state control from getCensusComparisonData.
-function processCensusDataStep2of2(data) {
-	censusData.comp = data;
-	displayResults();
-}
+////////////////////////////
+//// EVENT WATCHER FUNCTIONS
+////////////////////////////
 
 //Gets somewhat accurate coordinates for user from browser. Browser handles consent.
 function handleGeolocatePress() {
@@ -335,21 +342,6 @@ function handleSearchSubmit() {
 	});
 }
 
-//Determines an approximate street address for coordinates and displays it in the search field.
-function reverseGeocode() {
-	console.log('reverseGeocode ran.');
-	geocoder.geocode({'location': pos}, function(results, status) {
-	if (status === 'OK') {
-		if (results[0]) {
-				console.log(`reverseGeocode results are ${results[0].formatted_address}.`)
-				$('.js-location-entry').val(results[0].formatted_address);
-		}
-	} else {
-		window.alert('Geocoder failed due to: ' + status);
-	}
-	});
-}
-
 //Shows and hides the census data container.
 function watchResultsToggle() {
 	console.log('watchResultsToggle ran.');
@@ -368,6 +360,85 @@ function watchOptionsToggle() {
 	});
 }
 
+////////////////////////////
+//// DISPLAY FUNCTIONS
+////////////////////////////
+
+//Populates bottom results panel with travel times legend and census info.
+function displayResults() {
+	//Abbreviate census prefixes for more concise code
+	let cmp = censusData.comp;
+	let lcl = censusData.local;
+	
+	//Get ID of place type for better readability (val is used for params)
+	let placeType = $('input[name=showPlace]:checked');
+	let placeTypeID = placeType.attr('id');
+
+	console.log(`displayResults ran with ${cmp.scope}.`);
+	let resultsString = `
+		<div class="results-outer">
+			<div class="center-it legend" alt="Describes map overlay and symbols">
+				Travel time (${$("#js-search-form-transit-type").val()}): 
+				<span class="short-cube" alt="Color swatch for shortest travel time"></span> 10 min    
+				<span class="medium-cube" alt="Color swatch for medium travel time"></span> 20 min    
+				<span class="long-cube"></span> 30 min    
+				<span class="blue-circle"></span> ${placeTypeID}
+			</div>
+			<div class="center-it"><span class="bold-it">${numberWithCommas(lcl.housingTotalOccupied)}</span> residences nearby in ${lcl.scope}:</div>
+			<div class="small-text center-it">(Comparing with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}, comparisons in parentheses)</div>
+
+				<div class="results-inner">
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Population:</div>
+								Total: ${numberWithCommas(lcl.populationTotal)} (${(((lcl.populationTotal / cmp.populationTotal)*100)).toFixed(1)}% of ${numberWithCommas(cmp.populationTotal)})<br />
+
+								Male: ${lcl.popMalePct}% 
+								(<span class="${cmp.popMalePct > lcl.popMalePct ? "comp-higher" : (cmp.popMalePct < lcl.popMalePct ? "comp-lower" : "comp-equal")}">${censusData.comp.popMalePct}%</span>)<br />
+								
+								Female: ${lcl.popFemalePct}% 
+								(<span class="${cmp.popFemalePct > lcl.popFemalePct ? "comp-higher" : (cmp.popFemalePct < lcl.popFemalePct ? "comp-lower" : "comp-equal")}">${cmp.popFemalePct}%</span>)<br />
+						</div>
+					</div>
+
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Demographics:</div>
+								Youth: ${lcl.popYouthPct}% 
+								(<span class="${cmp.popYouthPct > lcl.popYouthPct ? "comp-higher" : (cmp.popYouthPct < lcl.popYouthPct ? "comp-lower" : "comp-equal")}">${cmp.popYouthPct}%</span>)<br />
+
+								Adults: ${lcl.popAdultPct}% 
+								(<span class="${cmp.popAdultPct > lcl.popAdultPct ? "comp-higher" : (cmp.popAdultPct < lcl.popAdultPct ? "comp-lower" : "comp-equal")}">${censusData.comp.popAdultPct}%</span>)<br />
+
+								Seniors: ${lcl.popSeniorsPct}%
+								(<span class="${cmp.popSeniorsPct > lcl.popSeniorsPct ? "comp-higher" : (cmp.popSeniorsPct < lcl.popSeniorsPct ? "comp-lower" : "comp-equal")}">${cmp.popSeniorsPct}%</span>)<br />
+						</div>
+					</div>
+
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Household Info:</div>
+								Household Size: ${lcl.householdSize}
+								(<span class="${cmp.householdSize > lcl.householdSize ? "comp-higher" : (cmp.householdSize < lcl.householdSize ? "comp-lower" : "comp-equal")}">${cmp.householdSize}</span>)<br />
+
+								Income: $${numberWithCommas(lcl.medianHouseholdIncome)} 
+								(<span class="${cmp.medianHouseholdIncome > lcl.medianHouseholdIncome ? "comp-higher" : (cmp.medianHouseholdIncome < lcl.medianHouseholdIncome ? "comp-lower" : "comp-equal")}">$${numberWithCommas(cmp.medianHouseholdIncome)}</span>)</br>
+								
+								Home Ownership: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)<br />
+						</div>
+					</div>
+				</div>
+				<p class="small-text center-it">Current position is ${pos.lat}, ${pos.lng}. Current FIPS ID is ${FIPS.FIPS}.</p>
+			</div>`;
+
+	$('div.results').html(resultsString);
+	$('div.results-container').slideDown("slow");
+}
+
+////////////////////////////
+//// DOCUMENT START FUNCTIONS & CALLBACK
+////////////////////////////
+
 //Document ready callback function - powers the page.
 function renderStartPage() {
 	$('button.results-toggle-btn').prop('disabled', true);
@@ -376,49 +447,6 @@ function renderStartPage() {
 	handleGeolocatePress();
 	watchOptionsToggle();
 	watchResultsToggle();
-}
-
-// Draws polygon travel times layer on base map.
-function showPolygons() {
-	console.log('showPolygons ran.');
-	let travelOptions = r360.travelOptions();
-
-	let time = new Date();
-	let currentTimeInSeconds = ((time.getHours() * 60) + time.getMinutes()) * 60
-	let currentDate = String(time.getFullYear()) + (Number(time.getMonth()) < 10 ? 0 : '') + String(time.getMonth()+1) + String(time.getDate())
-
-	let transitType = $('#js-search-form-transit-type').val();
-
-	let travelTimes = [600, 1200, 1800];
-
-	travelOptions.setServiceKey("9R3ACENBBE1POU85N7PVMSR");
-	travelOptions.setServiceUrl("https://service.route360.net/northamerica/");
-	travelOptions.addSource({ lat: pos.lat, lng: pos.lng });
-	travelOptions.setTravelTimes(travelTimes);
-	travelOptions.setTravelType(transitType);
-	travelOptions.setDate(currentDate);
-	travelOptions.setTime(currentTimeInSeconds);
-
-	// call the service
-	r360.PolygonService.getTravelTimePolygons(travelOptions,
-		function(polygons) {
-			colorPolygonLayer.update(polygons);
-			//Map colors changed to greens and purples for color-blind accessibility.
-			colorPolygonLayer.setColors([{
-				'time': 600,
-				'color': '#405d27'
-				}, {
-				'time': 1200,
-				'color': '#e9a3c9'
-				}, {
-				'time': 1800,
-				'color': '#af8dc3'
-				}, ]);
-		},
-		function(status, message) {
-			console.log("The route360 API is not available - double check your configuration options.");
-		}
-	);
 }
 
 console.log('App started.');
