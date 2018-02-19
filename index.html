@@ -6,7 +6,7 @@
     <title>Catchment App</title>
 
     <!--Stylesheets-->
-        <!--Bootstrap for responsiveness, Bootstrap JS omitted -->
+        <!--Bootstrap for responsiveness, Bootstrap JS for tabs -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <!-- Font Awesome for icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,6 +16,8 @@
     <!--Scripts-->
         <!--JQuery-->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <!-- Bootstrap JS for tabs -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <!-- Include Google Maps API -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_X-5DMfJFF_jbKvNcyXAE2zt32-2jDlI&libraries=places"></script>
         <!--  Include r360.js -->
@@ -47,7 +49,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="options-container col-md-8 mx-auto" aria-live="polite">
+                        <div class="options-container col-sm-8 mx-auto" aria-live="polite">
                             <div class="options-panel">
                                 <div role="listbox" aria-labelledby="transit-types-group">
                                     <!--Allows user to choose travel type for polygon layer-->
@@ -123,7 +125,7 @@
             
             <!--Results container for travel times legend and census data-->
             <div class="results-container row" aria-live="polite">
-                <div class="col-lg-8 mx-auto">
+                <div class="col-sm-8 mx-auto">
 					<div class="results"></div>
                 </div>
             </div>

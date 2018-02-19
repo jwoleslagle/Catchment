@@ -384,52 +384,58 @@ function displayResults() {
 				<span class="long-cube"></span> 30 min    
 				<span class="blue-circle"></span> ${placeTypeID}
 			</div>
-			<div class="center-it"><span class="bold-it">${numberWithCommas(lcl.housingTotalOccupied)}</span> residences nearby in ${lcl.scope}:</div>
-			<div class="small-text center-it">(Comparing with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}, comparisons in parentheses)</div>
 
-				<div class="results-inner">
-					<div class="results-panel">
-						<div class="data-indent">
-							<div class="bold-it">Population:</div>
-								Total: ${numberWithCommas(lcl.populationTotal)} (${(((lcl.populationTotal / cmp.populationTotal)*100)).toFixed(1)}% of ${numberWithCommas(cmp.populationTotal)})<br />
+			<div class="row results-inner">
+				<div class="col-sm-4">
+					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+						<a class="nav-link active" id="v-pills-pop-tab" data-toggle="pill" href="#v-pills-pop" role="tab" aria-controls="v-pills-pop" aria-selected="true">Population</a>
 
-								Male: ${lcl.popMalePct}% 
-								(<span class="${cmp.popMalePct > lcl.popMalePct ? "comp-higher" : (cmp.popMalePct < lcl.popMalePct ? "comp-lower" : "comp-equal")}">${censusData.comp.popMalePct}%</span>)<br />
-								
-								Female: ${lcl.popFemalePct}% 
-								(<span class="${cmp.popFemalePct > lcl.popFemalePct ? "comp-higher" : (cmp.popFemalePct < lcl.popFemalePct ? "comp-lower" : "comp-equal")}">${cmp.popFemalePct}%</span>)<br />
-						</div>
+						<a class="nav-link" id="v-pills-demographics-tab" data-toggle="pill" href="#v-pills-demographics" role="tab" aria-controls="v-pills-demographics" aria-selected="false">Demographics</a>
+						
+						<a class="nav-link" id="v-pills-households-tab" data-toggle="pill" href="#v-pills-households" role="tab" aria-controls="v-pills-households" aria-selected="false">Households</a>
+						
+						<a class="nav-link" id="v-pills-details-tab" data-toggle="pill" href="#v-pills-details" role="tab" aria-controls="v-pills-details" aria-selected="false">Details</a>
 					</div>
+				</div>
+				<div class="col-sm-8 v-aligner">
+					<div class="tab-content" id="v-pills-tabContent">
+						<div class="tab-pane fade show active" id="v-pills-pop" role="tabpanel" aria-labelledby="v-pills-pop-tab">
+							Total: ${numberWithCommas(lcl.populationTotal)} (${(((lcl.populationTotal / cmp.populationTotal)*100)).toFixed(1)}% of ${numberWithCommas(cmp.populationTotal)})<br />
 
-					<div class="results-panel">
-						<div class="data-indent">
-							<div class="bold-it">Demographics:</div>
-								Youth: ${lcl.popYouthPct}% 
-								(<span class="${cmp.popYouthPct > lcl.popYouthPct ? "comp-higher" : (cmp.popYouthPct < lcl.popYouthPct ? "comp-lower" : "comp-equal")}">${cmp.popYouthPct}%</span>)<br />
-
-								Adults: ${lcl.popAdultPct}% 
-								(<span class="${cmp.popAdultPct > lcl.popAdultPct ? "comp-higher" : (cmp.popAdultPct < lcl.popAdultPct ? "comp-lower" : "comp-equal")}">${censusData.comp.popAdultPct}%</span>)<br />
-
-								Seniors: ${lcl.popSeniorsPct}%
-								(<span class="${cmp.popSeniorsPct > lcl.popSeniorsPct ? "comp-higher" : (cmp.popSeniorsPct < lcl.popSeniorsPct ? "comp-lower" : "comp-equal")}">${cmp.popSeniorsPct}%</span>)<br />
+							Male: ${lcl.popMalePct}% 
+							(<span class="${cmp.popMalePct > lcl.popMalePct ? "comp-higher" : (cmp.popMalePct < lcl.popMalePct ? "comp-lower" : "comp-equal")}">${censusData.comp.popMalePct}%</span>)<br />
+							
+							Female: ${lcl.popFemalePct}% 
+							(<span class="${cmp.popFemalePct > lcl.popFemalePct ? "comp-higher" : (cmp.popFemalePct < lcl.popFemalePct ? "comp-lower" : "comp-equal")}">${cmp.popFemalePct}%</span>)
 						</div>
-					</div>
+						<div class="tab-pane fade" id="v-pills-demographics" role="tabpanel" aria-labelledby="v-pills-demographics-tab">
+							Youth: ${lcl.popYouthPct}% 
+							(<span class="${cmp.popYouthPct > lcl.popYouthPct ? "comp-higher" : (cmp.popYouthPct < lcl.popYouthPct ? "comp-lower" : "comp-equal")}">${cmp.popYouthPct}%</span>)<br />
 
-					<div class="results-panel">
-						<div class="data-indent">
-							<div class="bold-it">Household Info:</div>
-								Household Size: ${lcl.householdSize}
-								(<span class="${cmp.householdSize > lcl.householdSize ? "comp-higher" : (cmp.householdSize < lcl.householdSize ? "comp-lower" : "comp-equal")}">${cmp.householdSize}</span>)<br />
+							Adults: ${lcl.popAdultPct}% 
+							(<span class="${cmp.popAdultPct > lcl.popAdultPct ? "comp-higher" : (cmp.popAdultPct < lcl.popAdultPct ? "comp-lower" : "comp-equal")}">${censusData.comp.popAdultPct}%</span>)<br />
 
-								Income: $${numberWithCommas(lcl.medianHouseholdIncome)} 
-								(<span class="${cmp.medianHouseholdIncome > lcl.medianHouseholdIncome ? "comp-higher" : (cmp.medianHouseholdIncome < lcl.medianHouseholdIncome ? "comp-lower" : "comp-equal")}">$${numberWithCommas(cmp.medianHouseholdIncome)}</span>)</br>
-								
-								Home Ownership: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)<br />
+							Seniors: ${lcl.popSeniorsPct}%
+							(<span class="${cmp.popSeniorsPct > lcl.popSeniorsPct ? "comp-higher" : (cmp.popSeniorsPct < lcl.popSeniorsPct ? "comp-lower" : "comp-equal")}">${cmp.popSeniorsPct}%</span>)
+						</div>
+						<div class="tab-pane fade" id="v-pills-households" role="tabpanel" aria-labelledby="v-pills-households-tab">
+							Household Size: ${lcl.householdSize}
+							(<span class="${cmp.householdSize > lcl.householdSize ? "comp-higher" : (cmp.householdSize < lcl.householdSize ? "comp-lower" : "comp-equal")}">${cmp.householdSize}</span>)<br />
+
+							Income: $${numberWithCommas(lcl.medianHouseholdIncome)} 
+							(<span class="${cmp.medianHouseholdIncome > lcl.medianHouseholdIncome ? "comp-higher" : (cmp.medianHouseholdIncome < lcl.medianHouseholdIncome ? "comp-lower" : "comp-equal")}">$${numberWithCommas(cmp.medianHouseholdIncome)}</span>)</br>
+							
+							Home Ownership: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)
+						</div>
+						<div class="tab-pane fade" id="v-pills-details" role="tabpanel" aria-labelledby="v-pills-details-tab">
+							<div class="center-it"><span class="bold-it">${numberWithCommas(lcl.housingTotalOccupied)}</span> residences nearby in ${lcl.scope}:</div>
+							<div class="small-text center-it">Comparisons (in parentheses) with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}.</div><br />
+							<p class="small-text center-it">Current position is ${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}.<br />Current FIPS ID is ${FIPS.FIPS}.</p>
 						</div>
 					</div>
 				</div>
-				<p class="small-text center-it">Current position is ${pos.lat}, ${pos.lng}. Current FIPS ID is ${FIPS.FIPS}.</p>
-			</div>`;
+			</div>
+		</div>`;
 
 	$('div.results').html(resultsString);
 	$('div.results-container').slideDown("slow");
