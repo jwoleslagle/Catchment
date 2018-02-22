@@ -416,7 +416,7 @@ function displayResults() {
 							(<span class="${cmp.popFemalePct > lcl.popFemalePct ? "comp-higher" : (cmp.popFemalePct < lcl.popFemalePct ? "comp-lower" : "comp-equal")}">${cmp.popFemalePct}%</span>)
 
 							<div class="small-text center-it border-me-above">
-								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in ${lcl.scope} with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. Comparisons in parentheses.
+								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. <br />Comparisons in parentheses.
 							</div>
 						</div>
 						<div class="tab-pane fade" id="v-pills-demographics" role="tabpanel" aria-labelledby="v-pills-demographics-tab">
@@ -430,7 +430,7 @@ function displayResults() {
 							(<span class="${cmp.popSeniorsPct > lcl.popSeniorsPct ? "comp-higher" : (cmp.popSeniorsPct < lcl.popSeniorsPct ? "comp-lower" : "comp-equal")}">${cmp.popSeniorsPct}%</span>)
 
 							<div class="small-text center-it border-me-above">
-								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in ${lcl.scope} with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. Comparisons in parentheses.
+								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. <br />Comparisons in parentheses.
 							</div>
 						</div>
 						<div class="tab-pane fade" id="v-pills-households" role="tabpanel" aria-labelledby="v-pills-households-tab">
@@ -443,7 +443,7 @@ function displayResults() {
 							Home Ownership: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)
 
 							<div class="small-text center-it border-me-above">
-								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in ${lcl.scope} with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. Comparisons in parentheses.
+								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. <br />Comparisons in parentheses.
 							</div>
 						</div>
 					</div>
