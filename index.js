@@ -356,7 +356,8 @@ function watchOptionsToggle() {
 	console.log('watchOptionsDropdown ran.');
 	$('button.options-toggle-btn').on('click', (e) => {
 			console.log('Options toggle btn clicked.');
-			$('div.options-container').slideToggle();
+			$('div.options-container').slideToggle();			$("div.options-container").css("display", "flex");
+
 	});
 }
 
@@ -378,7 +379,7 @@ function displayResults() {
 	let resultsString = `
 		<div class="results-outer">
 			<div class="row results-inner">
-				<div class="col-5">
+				<div class="col-4">
 					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">					
 						<a class="nav-link active" id="v-pills-details-tab" data-toggle="pill" href="#v-pills-details" role="tab" aria-controls="v-pills-details" aria-selected="true">Map</a>
 
@@ -389,7 +390,7 @@ function displayResults() {
 						<a class="nav-link" id="v-pills-households-tab" data-toggle="pill" href="#v-pills-households" role="tab" aria-controls="v-pills-households" aria-selected="false">Households</a>
 					</div>
 				</div>
-				<div class="col-7 v-aligner">
+				<div class="col-8 v-aligner">
 					<div class="tab-content" id="v-pills-tabContent">
 						<div class="tab-pane fade show active" id="v-pills-details" role="tabpanel" aria-labelledby="v-pills-details-tab">
 							<div class="center-it lgnd-bit-container" alt="Describes map overlay and symbols">

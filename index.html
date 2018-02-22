@@ -31,7 +31,7 @@
         <div class="container-fluid">
             <div id="map_canvas" class="map_canvas"></div>
             <div class="row">
-                <div class="col-sm-8 mx-auto">
+                <div class="col-xs-12 mx-auto">
                     <div class="search-box">
                         <h4>Catchment: Explore Your Neighborhood</h4>
                         <form id="js-search-form" role="form">
@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12 mx-auto options-container" aria-live="polite">
+                        <div class="col-xs-12 mx-auto options-container" aria-live="polite">
                             <div class="options-panel">
                                 <div role="listbox" aria-labelledby="transit-types-group">
                                     <!--Allows user to choose travel type for polygon layer-->
@@ -127,9 +127,10 @@
             </div>
             
             <!--Results container for travel times legend and census data-->
-            <div class="results-container row" aria-live="polite">
-                <div class="col-sm-8 mx-auto">
-					<div class="results"></div>
+            <div class="row results-container">
+                <div class="col-xs-12 mx-auto">
+                        <div class="results" aria-live="polite"></div>
+                    </div>
                 </div>
             </div>
 

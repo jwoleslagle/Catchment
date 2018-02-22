@@ -127,40 +127,28 @@ legend {
 }
 
 .results {
+    position: relative;
     background-color: black;
-    opacity: 0.9;
+    opacity: 0.8;
     color: white;
     border-radius: 10px;
 }
 
 .results-container {
     position: absolute;
-    display: none;
-    right: 0;
-    bottom: 2em;
-    left: 0;
-    padding: .5rem;
-    text-align: center;
+    width: 100%;
+    bottom: 2.5em;
 }
 
 .results-inner {
-    text-align: left;
     font-size: 0;
     font-size: 1rem;
     text-align: center;
-    width: 100%
-}
-
-.results-outer {
-    text-align: left;
-    font-size: 1rem;
 }
 
 .results-panel {
-    text-align: left;
     display: inline-block;
     vertical-align: top;
-    width: 31%;
     font-size: 1rem;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -169,7 +157,7 @@ legend {
 .search-box {
     text-align: center;
     background-color: black;
-    opacity: 0.9;
+    opacity: 0.8;
     color: white;
     padding: 10px;
     border-radius: 10px;
