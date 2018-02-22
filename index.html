@@ -33,23 +33,26 @@
             <div class="row">
                 <div class="col-sm-8 mx-auto">
                     <div class="search-box">
-                        <h4>Catchment: A Neighborhood Explorer</h4>
+                        <h4>Catchment: Explore Your Neighborhood</h4>
                         <form id="js-search-form" role="form">
                             <!--Allows users to search for a location with a street address-->
-                            <span class="left-align">
-                            <label for="query">Enter an address (US address required for census info):</span></label><br />
-                            <input type="text" name="location-entry" class="js-location-entry" size="40" placeholder="1094 Commerce Dr., Falls Church, VA" aria-label="search-location" /></span>
-                            <button type="submit" class="submit-btn" aria-label="submit">Search</button><br />
+                            <label for="query" class="left-align">Enter an address or city:</label>
+                            <div class="row">
+                                <div class="col-12">
+                                    <input type="text" name="location-entry" class="location-entry js-location-entry" placeholder="Use US address for census info" aria-label="search-location" />
+                                    <button type="submit" class="submit-btn" aria-label="submit">Search</button>
+                                </div>
+                            </div>
                             <div class="secondary-btns">
-                                <button type="button" class="geolocate-btn" aria-label="geolocate"><i class="fa fa-map-marker"></i> My Location</button>
+                                <button type="button" class="geolocate-btn" aria-label="geolocate"><i class="fa fa-map-marker"></i> Find Me</button>
                                 <button type="button" class="options-toggle-btn" aria-label="options-dropdown"><i class="fa fa-arrows-v"></i> Options</button>
-                                <button type="button" class="results-toggle-btn" aria-label="census-results-toggle"><i class="fa fa-arrows-v"></i> Census Results</button>
+                                <button type="button" class="results-toggle-btn" aria-label="census-results-toggle"><i class="fa fa-arrows-v"></i> Data</button>
                             </div>
                         </form>
                     </div>
 
                     <div class="row">
-                        <div class="options-container col-sm-8 mx-auto" aria-live="polite">
+                        <div class="col-12 mx-auto options-container" aria-live="polite">
                             <div class="options-panel">
                                 <div role="listbox" aria-labelledby="transit-types-group">
                                     <!--Allows user to choose travel type for polygon layer-->
@@ -134,9 +137,8 @@
 
 			<footer role="contentinfo">
                 <!--API attributions requested or required for use-->
-                <span class="small-text"><a href="https://www.route360.net"><img src="/images/route360.png" alt="Route 360 API logo" class="tiny-logo">Route360</a> | 
-                <a href="https://developers.google.com/maps/">Google Maps API</a> |
-                This product uses the <a href="https://www.census.gov/data/developers/data-sets/acs-5year.html">Census Bureau Data API</a> but is not endorsed or certified by the Census Bureau.</span>
+                <span class="small-text"><a href="https://www.route360.net"><img src="/images/route360.png" alt="Route 360 API logo" class="tiny-logo">Route360</a>  |  
+                <a href="https://developers.google.com/maps/">Google Maps API</a>  |  <a href="https://www.census.gov/data/developers/data-sets/acs-5year.html" alt="This product uses the Census Bureau Data API</a> but is not endorsed or certified by the Census Bureau.">Census Bureau Data API</a></span>
             </footer>
 
     </div>

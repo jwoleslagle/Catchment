@@ -20,12 +20,16 @@ h3 {
 }
 
 legend {
-    font-size: 1em;
-    font-weight: bold;
+    font-size: 1rem;
 }
 
 .bold-it {
     font-weight: bold;
+}
+
+.border-me-above {
+    margin-top: 1em;
+    border-top: 1px solid darkgray;
 }
 
 .center-it {
@@ -45,8 +49,8 @@ legend {
 }
 
 .data-indent {
-    margin-left: 20px;
-    text-indent: -20px;
+    margin-left: 5px;
+    text-indent: -5px;
 }
 
 .fa .fa-arrows-v {
@@ -66,6 +70,20 @@ legend {
     text-align: left;
 }
 
+.lgnd-bit-container {
+    font-size: 0;
+}
+
+.lgnd-bit {
+    font-size: 1rem;
+    display: inline-block;
+    position: relative;
+}
+
+.location-entry {
+    width: 70%
+}
+
 .map_canvas {
     height: 100%;
     top: 0;
@@ -75,6 +93,11 @@ legend {
     position: absolute;
 }
 
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    background-color: rgb(0, 56, 224);
+    color: white;
+}
+
 .options-container {
     display: none;
     background-color: black;
@@ -82,11 +105,14 @@ legend {
     color: white;
     text-align: center;
     border-radius: 10px;
+    font-size: 0;
 }
 
 .options-panel {
     display: inline-block;
     vertical-align: top;
+    width: 50%;
+    font-size: .9rem;
 }
 
 .parent-container {
@@ -97,7 +123,7 @@ legend {
 .radio-options {
     display: block;
     text-align: left;
-    margin-left: 70px;
+    margin-left: 30px;
 }
 
 .results {
@@ -153,8 +179,13 @@ legend {
     margin-top: 10px;
 }
 
+
 .small-text {
     font-size: .75em;
+}
+
+.submit-btn {
+    width: 20%;
 }
 
 .tiny-logo {
@@ -164,44 +195,31 @@ legend {
     padding: 3px;
 }
 
-.short-cube {
-    height: 1rem;
-    width: 5%;
-    border: 1px solid white;
+.swatch-circle {
+    background-color:blue;  
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+}
+
+.swatch-short {
     background-color: #405d27;
-    display: inline-block;
-    margin-left: 15px;
 }
 
-.medium-cube {
-    height: 1rem;
-    width: 5%;
-    border: 1px solid white;
+.swatch-medium {
     background-color: #e9a3c9;
-    display: inline-block;
-    margin-left: 15px;
 }
 
-.blue-circle:before {
-    content: ' \25CF';
-    color: blue;
-    font-size: 35px;
-    display: inline-block;
-    margin-left: 15px;
-}
-
-.long-cube {
-    height: 1rem;
-    width: 5%;
-    border: 1px solid white;
+.swatch-long {
     background-color: #af8dc3;
-    display: inline-block;
-    margin-left: 15px;
 }
 
-.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-    background-color: rgb(0, 56, 224);
-    color: white;
+.swatch {
+    height: 1rem;
+    width: 1rem;
+    border: 1px solid white;
+    display: inline-block;
+    margin-left: 10px;
 }
 
 .v-aligner {
