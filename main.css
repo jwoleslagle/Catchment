@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+button {
+    opacity: 1.0;;
+}
+
 footer {
     position: absolute;
     right: 0;
@@ -19,8 +23,18 @@ h3 {
     text-align: center;
 }
 
+hr {
+    border-color: inherit;
+    margin: 0;
+}
+
 legend {
     font-size: 1rem;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .bold-it {
@@ -81,13 +95,12 @@ legend {
 }
 
 .location-entry {
-    width: 70%
+    width: 50%
 }
 
 .map_canvas {
-    height: 100%;
     top: 0;
-    bottom: 0;
+    bottom: 2.25rem;
     left: 0;
     right: 0;
     position: absolute;
@@ -101,10 +114,11 @@ legend {
 .options-container {
     display: none;
     background-color: black;
-    opacity: 0.9;
+    opacity: 0.8;
     color: white;
     text-align: center;
-    border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     font-size: 0;
 }
 
@@ -113,6 +127,10 @@ legend {
     vertical-align: top;
     width: 50%;
     font-size: .9rem;
+}
+
+.options-toggle-btn {
+    margin-top: 10px;
 }
 
 .parent-container {
@@ -134,6 +152,18 @@ legend {
     border-radius: 10px;
 }
 
+.results-toggle-btn {
+    margin-top: 10px;
+}
+
+.results-wide {
+    position: relative;
+    background-color: black;
+    opacity: 0.8;
+    color: white;
+    border-radius: 10px;
+}
+
 .results-container {
     position: absolute;
     width: 100%;
@@ -141,7 +171,6 @@ legend {
 }
 
 .results-inner {
-    font-size: 0;
     font-size: 1rem;
     text-align: center;
 }
@@ -150,8 +179,8 @@ legend {
     display: inline-block;
     vertical-align: top;
     font-size: 1rem;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .search-box {
@@ -170,10 +199,6 @@ legend {
 
 .small-text {
     font-size: .75em;
-}
-
-.submit-btn {
-    width: 20%;
 }
 
 .tiny-logo {
@@ -214,4 +239,8 @@ legend {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.very-small-text {
+    font-size: .60em;
 }

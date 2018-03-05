@@ -376,10 +376,59 @@ function displayResults() {
 	let placeTypeID = placeType.attr('id');
 
 	console.log(`displayResults ran with ${cmp.scope}.`);
+	let resultsWideString = `
+		<div class="results-outer">
+			<div class="center-it lgnd-bit-container" alt="Describes map overlay and symbols">
+				<div class="lgnd-bit">Travel time (${$("#js-search-form-transit-type").val()}):</div>
+				<div class="lgnd-bit"><span class="swatch swatch-short" alt="Color swatch for shortest travel time"></span> 10 min</div>
+				<div class="lgnd-bit"><span class="swatch swatch-medium" alt="Color swatch for medium travel time"></span> 20 min</div>
+				<div class="lgnd-bit"><span class="swatch swatch-long"></span> 30 min</div>
+				<div class="lgnd-bit"><span class="swatch swatch-circle"></span> ${placeTypeID}</div>
+			</div><hr />
+			<div class="center-it"><span class="bold-it">${numberWithCommas(lcl.housingTotalOccupied)}</span> residences nearby in ${lcl.scope}:</div>
+			<div class="small-text center-it">(Comparing with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}, comparisons in parentheses)</div><hr />
+				<div class="row justify-content-around results-inner">
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Population:</div>
+								Total: ${numberWithCommas(lcl.populationTotal)} (${numberWithCommas(cmp.populationTotal)})<br />
+								Male: ${lcl.popMalePct}% 
+								(<span class="${cmp.popMalePct > lcl.popMalePct ? "comp-higher" : (cmp.popMalePct < lcl.popMalePct ? "comp-lower" : "comp-equal")}">${censusData.comp.popMalePct}%</span>)<br />
+								
+								Female: ${lcl.popFemalePct}% 
+								(<span class="${cmp.popFemalePct > lcl.popFemalePct ? "comp-higher" : (cmp.popFemalePct < lcl.popFemalePct ? "comp-lower" : "comp-equal")}">${cmp.popFemalePct}%</span>)<br />
+						</div>
+					</div>
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Demographics:</div>
+								Youth: ${lcl.popYouthPct}% 
+								(<span class="${cmp.popYouthPct > lcl.popYouthPct ? "comp-higher" : (cmp.popYouthPct < lcl.popYouthPct ? "comp-lower" : "comp-equal")}">${cmp.popYouthPct}%</span>)<br />
+								Adults: ${lcl.popAdultPct}% 
+								(<span class="${cmp.popAdultPct > lcl.popAdultPct ? "comp-higher" : (cmp.popAdultPct < lcl.popAdultPct ? "comp-lower" : "comp-equal")}">${censusData.comp.popAdultPct}%</span>)<br />
+								Seniors: ${lcl.popSeniorsPct}%
+								(<span class="${cmp.popSeniorsPct > lcl.popSeniorsPct ? "comp-higher" : (cmp.popSeniorsPct < lcl.popSeniorsPct ? "comp-lower" : "comp-equal")}">${cmp.popSeniorsPct}%</span>)<br />
+						</div>
+					</div>
+					<div class="results-panel">
+						<div class="data-indent">
+							<div class="bold-it">Household Info:</div>
+								Household Size: ${lcl.householdSize}
+								(<span class="${cmp.householdSize > lcl.householdSize ? "comp-higher" : (cmp.householdSize < lcl.householdSize ? "comp-lower" : "comp-equal")}">${cmp.householdSize}</span>)<br />
+								Income: $${numberWithCommas(lcl.medianHouseholdIncome)} 
+								(<span class="${cmp.medianHouseholdIncome > lcl.medianHouseholdIncome ? "comp-higher" : (cmp.medianHouseholdIncome < lcl.medianHouseholdIncome ? "comp-lower" : "comp-equal")}">$${numberWithCommas(cmp.medianHouseholdIncome)}</span>)</br>
+								
+								Homeowner %: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)<br />
+						</div>
+					</div>
+				</div>
+				<p class="small-text center-it">Current position is ${pos.lat}, ${pos.lng}. Current FIPS ID is ${FIPS.FIPS}.</p>
+			</div>`;
+
 	let resultsString = `
 		<div class="results-outer">
 			<div class="row results-inner">
-				<div class="col-4">
+				<div class="col-5">
 					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">					
 						<a class="nav-link active" id="v-pills-details-tab" data-toggle="pill" href="#v-pills-details" role="tab" aria-controls="v-pills-details" aria-selected="true">Map</a>
 
@@ -390,7 +439,7 @@ function displayResults() {
 						<a class="nav-link" id="v-pills-households-tab" data-toggle="pill" href="#v-pills-households" role="tab" aria-controls="v-pills-households" aria-selected="false">Households</a>
 					</div>
 				</div>
-				<div class="col-8 v-aligner">
+				<div class="col-7 v-aligner">
 					<div class="tab-content" id="v-pills-tabContent">
 						<div class="tab-pane fade show active" id="v-pills-details" role="tabpanel" aria-labelledby="v-pills-details-tab">
 							<div class="center-it lgnd-bit-container" alt="Describes map overlay and symbols">
@@ -415,8 +464,8 @@ function displayResults() {
 							Female: ${lcl.popFemalePct}% 
 							(<span class="${cmp.popFemalePct > lcl.popFemalePct ? "comp-higher" : (cmp.popFemalePct < lcl.popFemalePct ? "comp-lower" : "comp-equal")}">${cmp.popFemalePct}%</span>)
 
-							<div class="small-text center-it border-me-above">
-								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. <br />Comparisons in parentheses.
+							<div class="very-small-text center-it border-me-above">
+								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. Comparisons in parentheses.
 							</div>
 						</div>
 						<div class="tab-pane fade" id="v-pills-demographics" role="tabpanel" aria-labelledby="v-pills-demographics-tab">
@@ -429,8 +478,8 @@ function displayResults() {
 							Seniors: ${lcl.popSeniorsPct}%
 							(<span class="${cmp.popSeniorsPct > lcl.popSeniorsPct ? "comp-higher" : (cmp.popSeniorsPct < lcl.popSeniorsPct ? "comp-lower" : "comp-equal")}">${cmp.popSeniorsPct}%</span>)
 
-							<div class="small-text center-it border-me-above">
-								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. <br />Comparisons in parentheses.
+							<div class="very-small-text center-it border-me-above">
+								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. Comparisons in parentheses.
 							</div>
 						</div>
 						<div class="tab-pane fade" id="v-pills-households" role="tabpanel" aria-labelledby="v-pills-households-tab">
@@ -442,8 +491,8 @@ function displayResults() {
 							
 							Home Ownership: ${lcl.homeownerPct}% (<span class="${cmp.homeownerPct > lcl.homeownerPct ? "comp-higher" : (cmp.homeownerPct < lcl.homeownerPct ? "comp-lower" : "comp-equal")}">${cmp.homeownerPct}%</span>)
 
-							<div class="small-text center-it border-me-above">
-								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. <br />Comparisons in parentheses.
+							<div class="very-small-text center-it border-me-above">
+								Comparing ${numberWithCommas(lcl.housingTotalOccupied)} residences in <br />${lcl.scope}<br /> with ${numberWithCommas(cmp.housingTotalOccupied)} residences in ${cmp.scope}. Comparisons in parentheses.
 							</div>
 						</div>
 					</div>
@@ -452,6 +501,7 @@ function displayResults() {
 		</div>`;
 
 	$('div.results').html(resultsString);
+	$('div.results-wide').html(resultsWideString);
 	$('div.results-container').slideDown("slow");
 }
 
